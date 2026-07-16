@@ -1,0 +1,128 @@
+{
+  "spora": "S P O R A",
+  "required_field": "Required field",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "retry": "Retry",
+  "active": "Active",
+  "un_active": "Un Active",
+  "unknown": "UnKnown",
+  "logout": "Logout",
+  "email": "Email",
+  "password": "Password",
+  "full_name": "Full Name",
+  "phone_number": "Phone Number",
+  "language": "Language",
+  "timezone": "Timezone",
+  "join_date": "Join Date",
+  "login_btn": "Login",
+  "register_btn": "Register",
+  "account_created": {
+    "title": "Account was created",
+    "description": "Proin in mi maximus, tempus libero vitae, hendrerit nisl. Curabitur posuere, augue a feugiat convallis."
+  },
+  "check_your_email": {
+    "title": "Check your e-mail",
+    "description": "We have sent you informations to\nreset your password"
+  },
+  "login": {
+    "title": "Login into your account",
+    "dont_have_account": "Don’t have an account?",
+    "sign_up": "Sign Up",
+    "forgot_password": "Forgot Password?",
+    "mfa_required": "MFA is required. Please verify your account.",
+    "success": "Login successfully!"
+  },
+  "register": {
+    "title": "Register to Spora app",
+    "already_have_account": "Already have an account?",
+    "sign_in": "Sign In",
+    "your_email": "Your e-mail",
+    "retype_password": "Re-type your password"
+  },
+  "reset_password": {
+    "title": "Reset password",
+    "description": "Enter your e-mail address and we will send you futher instructions on how to reset the password.",
+    "continue_btn": "Continue",
+    "return_to_sign_in": "Return to Sign In"
+  },
+  "mfa": {
+    "title": "MFA Verification",
+    "description": "We have sent a verification code to your registered email address. Please enter the 4-digit code to proceed.",
+    "confirm_continue": "Confirm & Continue",
+    "resend_code_in": "Resend code in {} seconds",
+    "resend_code": "Resend Code"
+  },
+  "dashboard": {
+    "error_loading": "Occurred happened while loading the data",
+    "connect_internet": "Pleas Connect To Your Internet And Try Again",
+    "quick_actions": "Quick Actions",
+    "profile": {
+      "title": "Profile",
+      "subtitle": "See And Update Your Info"
+    },
+    "security": {
+      "title": "Security And Authentication",
+      "subtitle": "Update Password & MFA Settings"
+    },
+    "settings": {
+      "title": "App Settings",
+      "subtitle": "Language, Themes And App Settings"
+    },
+    "hello": " Hello👋",
+    "account_status": "Account Status"
+  },
+  "profile": {
+    "title": "Profile",
+    "update_profile": "Update Profile",
+    "active_account": "Active Account",
+    "unactive_account": "Un Active Account"
+  },
+  "security": {
+    "title": "Security",
+    "password": {
+      "title": "Password",
+      "subtitle": "Change password and secure your account"
+    },
+    "mfa": {
+      "title": "MFA Settings",
+      "subtitle": "Manage Authentication"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Edit your personal details and avatar"
+    },
+    "security_password": {
+      "title": "Security & Password",
+      "subtitle": "Change password and secure your account"
+    },
+    "preferences": "Preferences",
+    "dark_mode": {
+      "title": "Dark Mode",
+      "subtitle": "Enable dark theme for the app"
+    },
+    "language": "Language",
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Control alerts and notification sounds"
+    },
+    "support_help": "Support & Help",
+    "help_center": {
+      "title": "Help Center",
+      "subtitle": "FAQs and technical support"
+    },
+    "about_app": {
+      "title": "About App",
+      "subtitle": "Terms, conditions, and privacy policy"
+    },
+    "select_language": "Select Language"
+  },
+  "logout_confirm": {
+    "title": "Are you sure you want to logout ?",
+    "subtitle": "You will have to enter the verification code and password again on your next login."
+  }
+}
