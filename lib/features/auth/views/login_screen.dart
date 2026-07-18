@@ -10,7 +10,6 @@ import 'package:spora_app/core/helper/app_validator.dart';
 import 'package:spora_app/core/routing/app_routes.dart';
 import 'package:spora_app/core/shared/custom_button.dart';
 import 'package:spora_app/core/shared/custom_logo.dart';
-import 'package:spora_app/core/shared/custom_text_button.dart';
 import 'package:spora_app/core/shared/custom_textfield.dart';
 import 'package:spora_app/core/theme/app_colors.dart';
 import 'package:spora_app/features/auth/cubits/login/login_cubit.dart';
@@ -75,21 +74,6 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(LocaleKeys.login_dont_have_account.tr()),
-                            CustomTextBtn(
-                              text: LocaleKeys.login_sign_up.tr(),
-                              onPressed: () {
-                                GoRouter.of(
-                                  context,
-                                ).push(AppRoutes.registerScreen);
-                              },
-                            ),
-                          ],
-                        ),
-
                         SizedBox(height: 30.h),
                         CustomTextField(
                           controller: cubit.email,
@@ -129,18 +113,12 @@ class LoginScreen extends StatelessWidget {
                                   color: AppColors.primary,
                                 ),
                               )
-                            : AppButton(text: LocaleKeys.login_btn.tr(), onPressed: cubit.login),
+                            : AppButton(
+                                text: LocaleKeys.login_btn.tr(),
+                                onPressed: cubit.login,
+                              ),
 
                         SizedBox(height: 20.h),
-
-                        CustomTextBtn(
-                          text: LocaleKeys.login_forgot_password.tr(),
-                          onPressed: () {
-                            GoRouter.of(
-                              context,
-                            ).push(AppRoutes.resetPasswordScreen);
-                          },
-                        ),
                       ],
                     ),
                   ),

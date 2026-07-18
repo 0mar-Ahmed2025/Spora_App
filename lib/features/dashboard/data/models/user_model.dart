@@ -52,26 +52,27 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
+    DateTime? safeParseDate(dynamic dateStr) {
+      if (dateStr == null || dateStr.toString().isEmpty) return null;
+      return DateTime.tryParse(dateStr.toString());
+    }
+
     return UserData(
-      id: json['id'] ?? '',
-      email: json['email'] ?? '',
-      displayName: json['display_name'] ?? '',
-      firstName: json['first_name'] ?? '',
-      lastName: json['last_name'] ?? '',
-      locale: json['locale'] ?? '',
-      avatarUrl: json['avatar_url'] ?? '',
-      timezone: json['timezone'] ?? '',
-      mobile: json['mobile'] ?? '',
-      theme: json['theme'] ?? '',
+      id: json['id']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      displayName: json['display_name']?.toString() ?? '',
+      firstName: json['first_name']?.toString() ?? '',
+      lastName: json['last_name']?.toString() ?? '',
+      locale: json['locale']?.toString() ?? '',
+      avatarUrl: json['avatar_url']?.toString() ?? '',
+      timezone: json['timezone']?.toString() ?? '',
+      mobile: json['mobile']?.toString() ?? '',
+      theme: json['theme']?.toString() ?? '',
       isActive: json['is_active'] ?? false,
-      lastActivity: json['last_activity'] != null
-          ? DateTime.parse(json['last_activity'])
-          : null,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      lastActivity: safeParseDate(json['last_activity']),
+      createdAt: safeParseDate(json['created_at']) ?? DateTime.now(),
+      updatedAt: safeParseDate(json['updated_at']) ?? DateTime.now(),
+      deletedAt: safeParseDate(json['deleted_at']),
     );
   }
 

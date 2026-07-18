@@ -1,6 +1,3 @@
-// ignore_for_file: empty_catches
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:spora_app/core/network/api_helper.dart';
 import 'package:spora_app/core/network/api_response.dart';
@@ -14,20 +11,23 @@ class DashboardRepo {
     try {
       var response = await apiHelper.getRequest(
         isProtected: true,
-        // sendRefreshToken: true,
         endPoint: EndPoints.getProfileInfo,
       );
-      log(response.data.toString());
-      var userModel = UserData.fromJson(response.data as Map<String, dynamic>);
-      if (response.status) {
+
+      if (response.status && response.data is Map) {
+        var userModel = UserData.fromJson(
+          Map<String, dynamic>.from(response.data as Map),
+        );
         return right(userModel);
-      } else {
+      }
+
+      if (!response.status) {
         return left(response.message);
       }
+
+      return left('Invalid data format received from server.');
     } catch (e) {
       return left(ApiResponse.fromError(e).message);
     }
   }
-
-
 }

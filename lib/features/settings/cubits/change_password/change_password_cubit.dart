@@ -23,6 +23,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
 
     try {
       var result = await repo.changePassword(
+        
         currentPassword: currentPasswordController.text,
         newPassword: newPasswordController.text,
         confirmPassword: confirmPasswordController.text,
@@ -44,6 +45,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
     currentPasswordController.dispose();
     newPasswordController.dispose();
     confirmPasswordController.dispose();
+    mfaCode.dispose();
     return super.close();
   }
 }

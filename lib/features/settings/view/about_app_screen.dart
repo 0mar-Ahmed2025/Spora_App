@@ -28,19 +28,31 @@ class AboutAppScreen extends StatelessWidget {
                 AboutActionTile(
                   icon: Icons.description_outlined,
                   title: 'Terms and Conditions',
-                  onTap: () {},
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Coming soon')),
+                    );
+                  },
                 ),
                 const AboutDivider(),
                 AboutActionTile(
                   icon: Icons.privacy_tip_outlined,
                   title: 'Privacy Policy',
-                  onTap: () {},
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Coming soon')),
+                    );
+                  },
                 ),
                 const AboutDivider(),
                 AboutActionTile(
                   icon: Icons.article_outlined,
                   title: 'Open Source Licenses',
-                  onTap: () {},
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Coming soon')),
+                    );
+                  },
                 ),
               ],
             ),

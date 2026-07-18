@@ -4,7 +4,6 @@ abstract class MfaState {}
 
 class MfaInitialState extends MfaState {}
 
-
 class MfaLoadingState extends MfaState {}
 
 class MfaSuccessState extends MfaState {
@@ -12,8 +11,16 @@ class MfaSuccessState extends MfaState {
   MfaSuccessState({required this.authModel});
 }
 
-
 class MfaErrorState extends MfaState {
   final String error;
   MfaErrorState({required this.error});
+}
+
+class MfaResendLoadingState extends MfaState {}
+
+class MfaResendSuccessState extends MfaState {}
+
+class MfaResendErrorState extends MfaState {
+  final String error;
+  MfaResendErrorState({required this.error});
 }

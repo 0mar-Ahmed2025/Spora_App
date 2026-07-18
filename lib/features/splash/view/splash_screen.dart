@@ -1,9 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:spora_app/core/cache/cache_helper.dart';
 import 'package:spora_app/core/constants/app_assets.dart';
 import 'package:spora_app/core/routing/app_routes.dart';
 import 'package:spora_app/core/theme/app_colors.dart';
@@ -35,9 +34,21 @@ class _SplashScreenState extends State<SplashScreen>
       end: const Offset(0, 0.1),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    Future.delayed(const Duration(seconds: 3), () {
+    _goNext();
+  }
+
+  Future<void> _goNext() async {
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+
+    final token = await CacheHelper().getAccessToken();
+    if (!mounted) return;
+
+    if (token != null && token.isNotEmpty) {
+      GoRouter.of(context).go(AppRoutes.dashboardScreen);
+    } else {
       GoRouter.of(context).go(AppRoutes.login);
-    });
+    }
   }
 
   @override
@@ -58,7 +69,6 @@ class _SplashScreenState extends State<SplashScreen>
               child: Image.asset(AppAssets.logo, height: 180.h, width: 180.w),
             ),
             SizedBox(height: 20.h),
-
             Text(
               LocaleKeys.spora.tr(),
               style: TextStyle(
@@ -67,10 +77,8 @@ class _SplashScreenState extends State<SplashScreen>
                 color: AppColors.textPrimary,
               ),
             ),
-
             SizedBox(height: 80.h),
-
-            CircularProgressIndicator(),
+            const CircularProgressIndicator(),
           ],
         ),
       ),

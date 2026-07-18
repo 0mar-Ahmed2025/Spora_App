@@ -20,17 +20,21 @@ class AuthResponseModel {
   });
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
+    List<String>? methods;
+    if (json['methods'] is List) {
+      methods = (json['methods'] as List).map((e) => e.toString()).toList();
+    }
+
     return AuthResponseModel(
-      mfaRequired: json['mfa_required'] as bool?,
-      mfaMethods: (json['methods'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
-      mfaToken: json['mfa_token'] as String?,
-      accessToken: json['access_token'] as String?,
-      refreshToken: json['refresh_token'] as String?,
-      expiresIn: json['expires_in'] as int?,
-      email: json['email'] as String?,
-      role: json['role'] as String?,
+      mfaRequired:
+          json['mfa_required'] == true || json['mfa']['verified'] == true,
+      mfaMethods: methods,
+      mfaToken: json['mfa_token']?.toString(),
+      accessToken: json['access_token']?.toString(),
+      refreshToken: json['refresh_token']?.toString(),
+      expiresIn: int.tryParse(json['expires_in']?.toString() ?? ''),
+      email: json['email']?.toString(),
+      role: json['role']?.toString(),
     );
   }
 }

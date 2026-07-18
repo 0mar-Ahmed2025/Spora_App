@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spora_app/core/helper/app_methods.dart';
+import 'package:spora_app/core/shared/logout_button.dart';
 import 'package:spora_app/core/theme/app_colors.dart';
 import 'package:spora_app/core/theme/theme_cubit.dart';
 import 'package:spora_app/features/settings/view/about_app_screen.dart';
@@ -22,13 +23,11 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(LocaleKeys.settings_title.tr())),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SectionHeader(title: LocaleKeys.settings_preferences.tr()),
             SizedBox(height: 8.h),
             SettingsGroup(
               children: [
@@ -55,30 +54,13 @@ class SettingsScreen extends StatelessWidget {
                     size: 14.r,
                     color: AppColors.textSecondary,
                   ),
-                  onTap: () => _showLanguageDialog(context),
-                ),
-                const SettingsDivider(),
-                SettingsTile(
-                  icon: Icons.notifications_none_rounded,
-                  iconColor: Colors.redAccent,
-                  title: LocaleKeys.settings_notifications_title.tr(),
-                  subtitle: LocaleKeys.settings_notifications_subtitle.tr(),
-                  onTap: () {},
+                  onTap: () => AppMethods.showLanguageDialog(context),
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
-            SectionHeader(title: LocaleKeys.settings_support_help.tr()),
-            SizedBox(height: 8.h),
+            SizedBox(height: 32.h),
             SettingsGroup(
               children: [
-                SettingsTile(
-                  icon: Icons.help_outline_rounded,
-                  iconColor: Colors.green,
-                  title: LocaleKeys.settings_help_center_title.tr(),
-                  subtitle: LocaleKeys.settings_help_center_subtitle.tr(),
-                  onTap: () {},
-                ),
                 const SettingsDivider(),
                 SettingsTile(
                   icon: Icons.info_outline_rounded,
@@ -96,50 +78,9 @@ class SettingsScreen extends StatelessWidget {
             ),
             SizedBox(height: 32.h),
             const LogoutButton(),
-            SizedBox(height: 20.h),
           ],
         ),
       ),
-    );
-  }
-
-  void _showLanguageDialog(BuildContext context) {
-    final currentLangCode = context.locale.languageCode;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(LocaleKeys.settings_select_language.tr()),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RadioListTile<String>(
-                title: const Text('English'),
-                value: 'en',
-                groupValue: currentLangCode,
-                onChanged: (value) {
-                  if (value != null) {
-                    context.setLocale(const Locale('en'));
-                    Navigator.pop(dialogContext);
-                  }
-                },
-              ),
-              RadioListTile<String>(
-                title: const Text('العربية'),
-                value: 'ar',
-                groupValue: currentLangCode,
-                onChanged: (value) {
-                  if (value != null) {
-                    context.setLocale(const Locale('ar'));
-                    Navigator.pop(dialogContext);
-                  }
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
@@ -313,30 +254,6 @@ class SettingsDivider extends StatelessWidget {
       indent: 56.w,
       endIndent: 16.w,
       color: Colors.grey.withOpacity(0.15),
-    );
-  }
-}
-
-class LogoutButton extends StatelessWidget {
-  const LogoutButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: TextButton.icon(
-        onPressed: () {
-          AppMethods.showLogoutConfirmation(context);
-        },
-        icon: const Icon(Icons.logout_rounded, color: Colors.red),
-        label: Text(
-          LocaleKeys.logout.tr(),
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
     );
   }
 }

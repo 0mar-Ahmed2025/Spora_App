@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +10,7 @@ import 'package:spora_app/core/routing/app_routes.dart';
 import 'package:spora_app/core/theme/app_colors.dart';
 import 'package:spora_app/features/auth/cubits/logout/logout_cubit.dart';
 import 'package:spora_app/features/auth/cubits/logout/logout_state.dart';
+import 'package:spora_app/features/dashboard/data/models/user_model.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
 
 abstract class AppMethods {
@@ -26,7 +29,7 @@ abstract class AppMethods {
             child: BlocConsumer<LogoutCubit, LogoutState>(
               listener: (context, state) {
                 if (state is LogoutSuccess) {
-                  GoRouter.of(context).go(AppRoutes.login);
+                  context.go(AppRoutes.login);
                 } else if (state is LogoutFailure) {
                   SnackBarPopUp().show(
                     context: context,
@@ -140,5 +143,52 @@ abstract class AppMethods {
         );
       },
     );
+  }
+
+  static void showLanguageDialog(BuildContext context) {
+    final currentLangCode = context.locale.languageCode;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(LocaleKeys.settings_select_language.tr()),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<String>(
+                title: const Text('English'),
+                value: 'en',
+                groupValue: currentLangCode,
+                onChanged: (value) {
+                  if (value != null) {
+                    context.setLocale(const Locale('en'));
+                    Navigator.pop(dialogContext);
+                  }
+                },
+              ),
+              RadioListTile<String>(
+                title: const Text('العربية'),
+                value: 'ar',
+                groupValue: currentLangCode,
+                onChanged: (value) {
+                  if (value != null) {
+                    context.setLocale(const Locale('ar'));
+                    Navigator.pop(dialogContext);
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static String getInitials(UserData userData) {
+    String initials = "";
+    if (userData.firstName.isNotEmpty) initials += userData.firstName[0];
+    if (userData.lastName.isNotEmpty) initials += userData.lastName[0];
+    return initials.isEmpty ? "?" : initials.toUpperCase();
   }
 }

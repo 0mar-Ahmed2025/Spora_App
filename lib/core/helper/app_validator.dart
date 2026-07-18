@@ -8,4 +8,15 @@ abstract class AppValidator {
     }
     return null;
   }
+
+  static String? validateEmail(String? value) {
+    final requiredError = validateRequired(value);
+    if (requiredError != null) return requiredError;
+
+    final emailPattern = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (!emailPattern.hasMatch(value!.trim())) {
+      return 'Please enter a valid email address.';
+    }
+    return null;
+  }
 }

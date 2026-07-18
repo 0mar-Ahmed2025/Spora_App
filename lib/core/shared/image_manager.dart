@@ -3,53 +3,48 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImageManager extends StatefulWidget {
+class ImageManager extends StatelessWidget {
   const ImageManager({
     super.key,
+    this.localImage,
     required this.unselectedImageBuilder,
     required this.selectedImageBuilder,
     this.networkImageBuilder,
     required this.onImageSelected,
   });
 
+  final XFile? localImage;
   final Widget unselectedImageBuilder;
   final Widget Function(XFile imagePath) selectedImageBuilder;
   final Widget? networkImageBuilder;
   final Function(XFile pickedImage) onImageSelected;
 
   @override
-  State<ImageManager> createState() => _ImageManagerState();
-}
-
-class _ImageManagerState extends State<ImageManager> {
-  final ImagePicker picker = ImagePicker();
-  XFile? image;
-
-  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: pickImage,
+      onTap: () => _pickImage(context),
       borderRadius: BorderRadius.circular(12),
       child: Builder(
         builder: (context) {
-          if (image != null) {
-            return widget.selectedImageBuilder(image!);
-          } else if (widget.networkImageBuilder != null) {
-            return widget.networkImageBuilder!;
+          if (localImage != null) {
+            return selectedImageBuilder(localImage!);
+          } else if (networkImageBuilder != null) {
+            return networkImageBuilder!;
           }
-          return widget.unselectedImageBuilder;
+          return unselectedImageBuilder;
         },
       ),
     );
   }
 
-  pickImage() async {
-    image = await picker.pickImage(source: ImageSource.gallery);
+  Future<void> _pickImage(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
-    if (image != null) {
-      widget.onImageSelected(image!);
+    if (pickedImage != null) {
+      onImageSelected(pickedImage);
     }
-
-    setState(() {});
   }
 }

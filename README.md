@@ -1,89 +1,105 @@
 # Maya Core Mobile Application
 
-This is the initial mobile application interface for the Maya platform using Flutter. It integrates with the existing Maya Core APIs and provides the main account-management features.
+Flutter mobile app for the Maya platform. It integrates with Maya Core APIs and covers authentication, MFA, dashboard, profile, and settings.
 
 ## Tech Stack
 
-* **Flutter Version:** (3.41.9)
-* **Dart Version:** (3.11.5)
-* **State Management:** Bloc and Cubit
-* **Main Dependencies:**
-  * `flutter_bloc`
-  * `flutter_screenutil`
-  * `easy_localization`
-  * `shared_preferences` / `flutter_secure_storage`
-  * `dio`
+- **Flutter:** 3.41.9
+- **Dart:** 3.11.5
+- **State management:** Bloc / Cubit
+- **Networking:** Dio
+- **Navigation:** GoRouter
+- **Storage:** flutter_secure_storage, shared_preferences
+- **UI:** flutter_screenutil, easy_localization
 
 ## Project Structure
 
-The project follows a feature-based architecture to ensure organization and scalability:
+```
+lib/
+├── core/
+│   ├── cache/
+│   ├── config/
+│   ├── network/
+│   └── routing/
+├── features/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── profile/
+│   ├── settings/
+│   └── splash/
+└── main.dart
+```
 
-    lib/
-    ├── app/
-    │   ├── app.dart
-    │   ├── router/
-    │   └── theme/
-    ├── core/
-    │   ├── api/
-    │   ├── errors/
-    │   ├── storage/
-    │   ├── widgets/
-    │   └── utilities/
-    ├── features/
-    │   ├── authentication/
-    │   ├── dashboard/
-    │   ├── profile/
-    │   ├── profile_image/
-    │   ├── mfa/
-    │   └── settings/
-    └── main.dart
+## Setup
 
-## Configuration and Setup
+### 1. Environment variables
 
-### API Base URL Configuration
-The API base URL is environment-based and is not hard-coded inside screens or widgets. Configure the Base URL inside your environment variables (`.env` file) or directly within the centralized `ApiHelper` class located in `lib/core/api/`.
+Copy the example file and adjust values if needed:
 
-### How to Run the Project
-1. Clone the repository to your local machine.
-2. Navigate to the project directory and fetch dependencies:
-   ```bash
-   flutter pub get
-3. Run the application on a connected device or emulator:
-    flutter run
+```bash
+cp .env.example .env
+```
 
-## Implemented Features and API Integration
-- A reusable API layer was created for communication with Maya Core, handling authentication headers, token injection, and centralized error parsing. The following features are implemented:
+| Variable | Description |
+|----------|-------------|
+| `BASE_URL` | Maya API base URL (must end with `/`) |
+| `MFA_RESEND_ENABLED` | Set to `true` when backend supports `auth/mfa/resend` |
+| `REGISTER_ENABLED` | Set to `true` when backend supports registration |
 
-- Authentication: Splash screen, Login with email/username and password, secure token storage, and session restoration.
+> **Note:** `.env` is gitignored. Never commit secrets or production tokens.
 
-- MFA Verification: Handling backend MFA challenges, verification code input, and returning to login on session expiry.
+### 2. Install dependencies
 
-- Dashboard: Main authenticated screen displaying user greeting, profile image, account status summary, and quick access to settings.
+```bash
+flutter pub get
+```
 
-- Profile Management: View and edit supported profile fields (Full name, Email, Phone number, Username), with backend validation.
+### 3. Run the app
 
-- Profile Image: Display current image, pick from the device gallery, preview, and upload using the backend flow.
+```bash
+flutter run
+```
 
-- Settings & Security: Edit personal info, change password, manage MFA status, UI Theme preference, Language selection, and Logout.
+### 4. Run tests
 
-### Known Limitations and Backend Features
-Local Preferences: Application settings that are not currently supported by the backend (such as Theme and Language preferences) are implemented as local UI preferences using local storage, strictly separated from server-side account settings.
+```bash
+flutter test
+```
 
-MFA Simulation: The application does not simulate MFA locally or bypass verification; it strictly follows the existing backend responses.
+Tests cover auth redirect rules (Login → MFA without access token), login/MFA/logout session handling, reset password, and model parsing.
 
-Dashboard Scope: The dashboard is a simple entry point. Analytics, charts, booking information, and payment widgets are omitted in this version.
+## Implemented Features
 
-### Out of Scope
-The following features and services are intentionally excluded from this implementation:
+- **Authentication:** Login, MFA verification, logout, session restore
+- **Reset password:** Forgot-password API integration (`auth/password/forgot`)
+- **Dashboard:** Profile summary and quick actions
+- **Profile:** View/update profile fields and upload profile image (upload-url → upload → commit)
+- **Settings & Security:** Change password, MFA setup/disable, theme, language, logout
 
-- Tours and Tour search
+## Backend Limitations
 
-- Booking, Orders, and Payments
+Some endpoints are prepared in the app but disabled until the backend enables them:
 
-- Loyalty points and Gift cards
+| Feature | Status | How to enable |
+|---------|--------|---------------|
+| **Register** | Removed from UI | Set `REGISTER_ENABLED=true` and re-add register flow when API is ready |
+| **Resend MFA OTP** | UI hidden; API wired | Set `MFA_RESEND_ENABLED=true` in `.env` |
 
-- CRM and CMS Admin panels
+When resend is disabled, the MFA screen shows: *"Resend code is not available yet."*
 
-- Push notifications and Chat
+## Auth Flow
 
-- Advanced analytics
+```
+Splash → Login
+           ├─ MFA required → MFA Screen → Dashboard
+           └─ Direct login ──────────────→ Dashboard
+Dashboard → Logout → Login
+```
+
+The router treats Login, Splash, MFA, and Reset Password as public routes so MFA works before an access token exists.
+
+## Out of Scope
+
+- Tours, bookings, payments, loyalty
+- Push notifications and chat
+- Admin panels and analytics widgets

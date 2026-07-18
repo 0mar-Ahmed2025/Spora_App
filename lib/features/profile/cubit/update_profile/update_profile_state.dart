@@ -2,7 +2,7 @@ abstract class UpdateProfileState {}
 
 class UpdateProfileInitialState extends UpdateProfileState {}
 
-class UpdateCompanyLoadingState extends UpdateProfileState {}
+class UpdateProfileLoadingState extends UpdateProfileState {}
 
 class UpdateProfileSuccessState extends UpdateProfileState {
   final String successMsg;

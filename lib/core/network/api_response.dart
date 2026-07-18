@@ -1,6 +1,5 @@
-// ignore_for_file: avoid_print
-
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiResponse {
   final bool status;
@@ -16,15 +15,18 @@ class ApiResponse {
   });
 
   factory ApiResponse.fromResponse(Response response) {
-    bool isSuccess = response.data is Map<String, dynamic> 
-        ? (response.data['ok'] ?? false) 
+    bool isSuccess = response.data is Map<String, dynamic>
+        ? (response.data['ok'] ?? false)
         : (response.statusCode == 200 || response.statusCode == 201);
 
     String msg = 'An error occurred.';
     dynamic payloadData;
 
     if (response.data is Map<String, dynamic>) {
-      msg = response.data['message_en'] ?? response.data['reason'] ?? (isSuccess ? 'Success' : 'An error occurred.');
+      msg =
+          response.data['message_en'] ??
+          response.data['reason'] ??
+          (isSuccess ? 'Success' : 'An error occurred.');
       payloadData = response.data['data'];
     } else {
       msg = isSuccess ? 'Success' : 'An error occurred.';
@@ -40,20 +42,30 @@ class ApiResponse {
   }
 
   factory ApiResponse.fromError(dynamic error) {
-    print('--- ACTUAL ERROR CAUGHT: ${error.toString()}');
+    if (kDebugMode && error is DioException) {
+      print(
+        'Api error: ${error.type.name} '
+        '${error.response?.statusCode ?? ''} '
+        '${error.requestOptions.path}',
+      );
+    } else if (kDebugMode) {
+      print('Api error: ${error.runtimeType}');
+    }
 
     if (error is DioException) {
       return ApiResponse(
         status: false,
         data: error.response?.data,
-        statusCode: error.response != null ? (error.response!.statusCode ?? 500) : 500,
+        statusCode: error.response != null
+            ? (error.response!.statusCode ?? 500)
+            : 500,
         message: _handleDioError(error),
       );
     } else {
       return ApiResponse(
         status: false,
         statusCode: 500,
-        message: 'App Error: ${error.toString()}',
+       message: 'App Error: An unexpected error occurred.',
       );
     }
   }

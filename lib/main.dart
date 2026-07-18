@@ -13,9 +13,8 @@ import 'package:spora_app/generated/codegen_loader.g.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await APIHelper.init();
-
   await dotenv.load(fileName: ".env");
+  await APIHelper.init();
   final ThemeMode savedTheme = await ThemeCacheHelper().getCachedThemeMode();
 
   runApp(
