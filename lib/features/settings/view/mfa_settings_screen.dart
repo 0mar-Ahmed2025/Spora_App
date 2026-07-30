@@ -71,7 +71,7 @@ class MfaSettingsScreen extends StatelessWidget {
 }
 
 class MfaHomeView extends StatelessWidget {
-  const MfaHomeView({required this.cubit});
+  const MfaHomeView({super.key, required this.cubit});
 
   final MfaSettingsCubit cubit;
 
@@ -167,7 +167,7 @@ class MfaHomeView extends StatelessWidget {
 }
 
 class SetupConfirmView extends StatelessWidget {
-  const SetupConfirmView({required this.setupData, required this.cubit});
+  const SetupConfirmView({super.key, required this.setupData, required this.cubit});
 
   final MfaSetupModel setupData;
   final MfaSettingsCubit cubit;
