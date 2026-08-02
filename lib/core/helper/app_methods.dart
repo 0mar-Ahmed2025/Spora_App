@@ -178,6 +178,17 @@ abstract class AppMethods {
                   }
                 },
               ),
+              RadioListTile<String>(
+                title: const Text('Persian'),
+                value: 'fa',
+                groupValue: currentLangCode,
+                onChanged: (value) {
+                  if (value != null) {
+                    context.setLocale(const Locale('fa'));
+                    Navigator.pop(dialogContext);
+                  }
+                },
+              ),
             ],
           ),
         );

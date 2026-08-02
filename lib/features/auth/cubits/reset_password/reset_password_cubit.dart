@@ -13,7 +13,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   final formKey = GlobalKey<FormState>();
 
   Future<void> submitResetRequest() async {
-    if (formKey.currentState?.validate() != true) return;
+    if (formKey.currentState?.validate() == false) return;
 
     emit(ResetPasswordLoading());
 

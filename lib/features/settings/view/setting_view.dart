@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: unused_local_variable, deprecated_member_use
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,9 @@ class SettingsScreen extends StatelessWidget {
     final themeMode = context.watch<ThemeCubit>().state;
     final isDarkMode = themeMode == ThemeMode.dark;
     final isArabic = context.locale.languageCode == 'ar';
-    final languageName = isArabic ? 'العربية' : 'English';
+    final isPersian = context.locale.languageCode == 'fa';
+
+    final languageName = isArabic ? 'العربية' : isPersian ? 'Persian' : 'English';
 
     return Scaffold(
       appBar: AppBar(title: Text(LocaleKeys.settings_title.tr())),

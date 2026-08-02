@@ -5,6 +5,7 @@ import 'package:spora_app/core/shared/logout_button.dart';
 import 'package:spora_app/core/theme/app_colors.dart';
 import 'package:spora_app/features/dashboard/cubits/get_profile_data/get_profile_cubit.dart';
 import 'package:spora_app/features/dashboard/data/models/user_model.dart';
+import 'package:spora_app/features/device_capabilities/widgets/device_capabilities_section.dart';
 import 'package:spora_app/features/profile/view/profile_screen.dart';
 import 'package:spora_app/features/dashboard/views/security_view.dart';
 import 'package:spora_app/features/dashboard/widgets/custom_account_status_widget.dart';
@@ -14,17 +15,23 @@ import 'package:spora_app/features/settings/view/setting_view.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
 
 class DashboardSuccessStateWidget extends StatelessWidget {
-  const DashboardSuccessStateWidget({
-    super.key,
-    required this.context,
-    required this.user,
-  });
+  const DashboardSuccessStateWidget({super.key, required this.user});
 
-  final BuildContext context;
   final UserData user;
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final tileBackground = isDarkMode
+        ? AppColors.darkSurface
+        : AppColors.background;
+    final textPrimary = isDarkMode
+        ? AppColors.darkTextPrimary
+        : AppColors.textPrimary;
+    final textSecondary = isDarkMode
+        ? AppColors.darkTextSecondary
+        : AppColors.textSecondary;
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.all(24.w),
@@ -42,16 +49,16 @@ class DashboardSuccessStateWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: textPrimary,
             ),
           ),
           SizedBox(height: 16.h),
 
           QuickAccessTile(
-            sporaBackgroundGray: AppColors.background,
+            sporaBackgroundGray: tileBackground,
             sporaPurple: AppColors.primary,
-            sporaTextDark: AppColors.textPrimary,
-            sporaTextMuted: AppColors.textSecondary,
+            sporaTextDark: textPrimary,
+            sporaTextMuted: textSecondary,
             icon: Icons.person_search_outlined,
             title: LocaleKeys.dashboard_profile_title.tr(),
             subtitle: LocaleKeys.dashboard_profile_subtitle.tr(),
@@ -71,10 +78,10 @@ class DashboardSuccessStateWidget extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           QuickAccessTile(
-            sporaBackgroundGray: AppColors.background,
+            sporaBackgroundGray: tileBackground,
             sporaPurple: AppColors.primary,
-            sporaTextDark: AppColors.textPrimary,
-            sporaTextMuted: AppColors.textSecondary,
+            sporaTextDark: textPrimary,
+            sporaTextMuted: textSecondary,
             icon: Icons.security_outlined,
             title: LocaleKeys.dashboard_security_title.tr(),
             subtitle: LocaleKeys.dashboard_security_subtitle.tr(),
@@ -91,10 +98,10 @@ class DashboardSuccessStateWidget extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           QuickAccessTile(
-            sporaBackgroundGray: AppColors.background,
+            sporaBackgroundGray: tileBackground,
             sporaPurple: AppColors.primary,
-            sporaTextDark: AppColors.textPrimary,
-            sporaTextMuted: AppColors.textSecondary,
+            sporaTextDark: textPrimary,
+            sporaTextMuted: textSecondary,
             icon: Icons.settings_outlined,
             title: LocaleKeys.dashboard_settings_title.tr(),
             subtitle: LocaleKeys.dashboard_settings_subtitle.tr(),
@@ -110,6 +117,21 @@ class DashboardSuccessStateWidget extends StatelessWidget {
             },
           ),
           SizedBox(height: 32.h),
+
+          Text(
+            LocaleKeys.device_capabilities_section_title.tr(),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: textPrimary,
+            ),
+          ),
+          SizedBox(height: 16.h),
+
+          const DeviceCapabilitiesSection(),
+
+          SizedBox(height: 32.h),
+
           const LogoutButton(),
         ],
       ),
