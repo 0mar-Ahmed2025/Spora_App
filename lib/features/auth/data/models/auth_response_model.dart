@@ -25,9 +25,12 @@ class AuthResponseModel {
       methods = (json['methods'] as List).map((e) => e.toString()).toList();
     }
 
+    final mfa = json['mfa'];
+
     return AuthResponseModel(
       mfaRequired:
-          json['mfa_required'] == true || json['mfa']['verified'] == true,
+          json['mfa_required'] == true ||
+              (mfa is Map && mfa['verified'] == true),
       mfaMethods: methods,
       mfaToken: json['mfa_token']?.toString(),
       accessToken: json['access_token']?.toString(),

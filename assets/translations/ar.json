@@ -42,7 +42,9 @@
   },
   "reset_password": {
     "title": "إعادة تعيين كلمة المرور",
-    "description": "أدخل عنوان بريدك الإلكتروني وسنرسل لك تعليمات إضافية حول كيفية إعادة تعيين كلمة المرور."
+    "description": "أدخل عنوان بريدك الإلكتروني وسنرسل لك تعليمات إضافية حول كيفية إعادة تعيين كلمة المرور.",
+    "continue_btn": "متابعة",
+    "return_to_sign_in": "العودة إلى تسجيل الدخول"
   },
   "mfa": {
     "title": "التحقق من المصادقة الثنائية (MFA)",
@@ -122,5 +124,41 @@
   "logout_confirm": {
     "title": "هل أنت متأكد من رغبتك في تسجيل الخروج؟",
     "subtitle": "سيتعين عليك إدخال رمز التحقق وكلمة المرور مرة أخرى في تسجيل الدخول التالي."
+  },
+  "device_capabilities": {
+    "section_title": "إمكانيات الجهاز",
+    "open_camera": "فتح الكاميرا",
+    "select_gallery": "اختيار من المعرض",
+    "get_location": "جلب الموقع الحالي",
+    "open_external_map": "فتح الخريطة الخارجية",
+    "pick_file": "اختيار ملف",
+    "record_audio": "تسجيل صوت",
+    "file_info": "تفاصيل الملف",
+    "file_name": "اسم الملف",
+    "file_path": "مسار الملف",
+    "file_size": "حجم الملف",
+    "file_type": "نوع الملف",
+    "latitude": "خط العرض",
+    "longitude": "خط الطول",
+    "accuracy": "دقة الموقع",
+    "retrieval_time": "وقت الجلب",
+    "start_recording": "بدء التسجيل",
+    "stop_recording": "إيقاف التسجيل",
+    "cancel_recording": "إلغاء التسجيل",
+    "recording_in_progress": "جاري التسجيل...",
+    "elapsed_time": "الوقت المنقضي",
+    "play_audio": "تشغيل الصوت",
+    "pause_audio": "إيقاف مؤقت",
+    "permission_required": "الإذن مطلوب",
+    "permission_denied_msg": "تم رفض الإذن. يرجى منح الإذن لاستخدام هذه الميزة.",
+    "permission_permanently_denied_msg": "تم رفض الإذن بشكل دائم. يرجى تفعيله من إعدادات التطبيق.",
+    "open_settings": "فتح الإعدادات",
+    "location_disabled_msg": "خدمة الموقع معطلة. يرجى تشغيل الـ GPS.",
+    "location_timeout_msg": "فشل جلب الموقع بسبب انتهاء مهلة الانتظار.",
+    "no_location_yet_msg": "يرجى جلب الموقع الحالي أولاً قبل فتح الخريطة.",
+    "no_map_app_msg": "لا يوجد تطبيق يتوفر لفتح الخرائط.",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "error_occurred": "حدث خطأ غير متوقع."
   }
 }

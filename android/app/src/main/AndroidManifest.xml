@@ -1,5 +1,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.INTERNET"/>
+<!-- Camera -->
+<uses-permission android:name="android.permission.CAMERA" />
+<!-- Location -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+<queries>
+        <!-- لدعم الـ Intent الخاص بالـ geo: -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+        <!-- لدعم فتح Google Maps عبر المتصفح/التطبيق بـ https -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+<!-- Audio Recording -->
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<!-- Storage & Media (Handling older vs newer Android versions) -->
+<!-- For Android 12 and below -->
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+<!-- For Android 13+ (API 33+) -->
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+<uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <application
         android:label="spora_app"
         android:name="${applicationName}"

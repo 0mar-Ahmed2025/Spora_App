@@ -58,7 +58,9 @@ class CodegenLoader extends AssetLoader{
   },
   "reset_password": {
     "title": "إعادة تعيين كلمة المرور",
-    "description": "أدخل عنوان بريدك الإلكتروني وسنرسل لك تعليمات إضافية حول كيفية إعادة تعيين كلمة المرور."
+    "description": "أدخل عنوان بريدك الإلكتروني وسنرسل لك تعليمات إضافية حول كيفية إعادة تعيين كلمة المرور.",
+    "continue_btn": "متابعة",
+    "return_to_sign_in": "العودة إلى تسجيل الدخول"
   },
   "mfa": {
     "title": "التحقق من المصادقة الثنائية (MFA)",
@@ -138,6 +140,42 @@ class CodegenLoader extends AssetLoader{
   "logout_confirm": {
     "title": "هل أنت متأكد من رغبتك في تسجيل الخروج؟",
     "subtitle": "سيتعين عليك إدخال رمز التحقق وكلمة المرور مرة أخرى في تسجيل الدخول التالي."
+  },
+  "device_capabilities": {
+    "section_title": "إمكانيات الجهاز",
+    "open_camera": "فتح الكاميرا",
+    "select_gallery": "اختيار من المعرض",
+    "get_location": "جلب الموقع الحالي",
+    "open_external_map": "فتح الخريطة الخارجية",
+    "pick_file": "اختيار ملف",
+    "record_audio": "تسجيل صوت",
+    "file_info": "تفاصيل الملف",
+    "file_name": "اسم الملف",
+    "file_path": "مسار الملف",
+    "file_size": "حجم الملف",
+    "file_type": "نوع الملف",
+    "latitude": "خط العرض",
+    "longitude": "خط الطول",
+    "accuracy": "دقة الموقع",
+    "retrieval_time": "وقت الجلب",
+    "start_recording": "بدء التسجيل",
+    "stop_recording": "إيقاف التسجيل",
+    "cancel_recording": "إلغاء التسجيل",
+    "recording_in_progress": "جاري التسجيل...",
+    "elapsed_time": "الوقت المنقضي",
+    "play_audio": "تشغيل الصوت",
+    "pause_audio": "إيقاف مؤقت",
+    "permission_required": "الإذن مطلوب",
+    "permission_denied_msg": "تم رفض الإذن. يرجى منح الإذن لاستخدام هذه الميزة.",
+    "permission_permanently_denied_msg": "تم رفض الإذن بشكل دائم. يرجى تفعيله من إعدادات التطبيق.",
+    "open_settings": "فتح الإعدادات",
+    "location_disabled_msg": "خدمة الموقع معطلة. يرجى تشغيل الـ GPS.",
+    "location_timeout_msg": "فشل جلب الموقع بسبب انتهاء مهلة الانتظار.",
+    "no_location_yet_msg": "يرجى جلب الموقع الحالي أولاً قبل فتح الخريطة.",
+    "no_map_app_msg": "لا يوجد تطبيق يتوفر لفتح الخرائط.",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "error_occurred": "حدث خطأ غير متوقع."
   }
 };
 static const Map<String,dynamic> _en = {
@@ -266,7 +304,207 @@ static const Map<String,dynamic> _en = {
   "logout_confirm": {
     "title": "Are you sure you want to logout ?",
     "subtitle": "You will have to enter the verification code and password again on your next login."
+  },
+  "device_capabilities": {
+    "section_title": "Device Capabilities",
+    "open_camera": "Open Camera",
+    "select_gallery": "Select from Gallery",
+    "get_location": "Get Current Location",
+    "open_external_map": "Open External Map",
+    "pick_file": "Pick a File",
+    "record_audio": "Record Audio",
+    "file_info": "File Details",
+    "file_name": "File Name",
+    "file_path": "File Path",
+    "file_size": "File Size",
+    "file_type": "File Type",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "accuracy": "Accuracy",
+    "retrieval_time": "Retrieval Time",
+    "start_recording": "Start Recording",
+    "stop_recording": "Stop Recording",
+    "cancel_recording": "Cancel Recording",
+    "recording_in_progress": "Recording...",
+    "elapsed_time": "Elapsed Time",
+    "play_audio": "Play Audio",
+    "pause_audio": "Pause Audio",
+    "permission_required": "Permission Required",
+    "permission_denied_msg": "Permission was denied. Please grant permission to use this feature.",
+    "permission_permanently_denied_msg": "Permission is permanently denied. Please enable it from application settings.",
+    "open_settings": "Open Settings",
+    "location_disabled_msg": "Location service is disabled. Please turn on GPS.",
+    "location_timeout_msg": "Failed to retrieve location due to timeout.",
+    "no_location_yet_msg": "Please retrieve current location first before opening map.",
+    "no_map_app_msg": "No application available to open maps.",
+    "cancel": "Cancel",
+    "close": "Close",
+    "error_occurred": "An unexpected error occurred."
   }
 };
-static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en};
+static const Map<String,dynamic> _fa = {
+  "spora": "S P O R A",
+  "required_field": "فیلد الزامی",
+  "confirm": "تأیید",
+  "cancel": "لغو",
+  "retry": "تلاش مجدد",
+  "active": "فعال",
+  "un_active": "غیرفعال",
+  "unknown": "نامشخص",
+  "logout": "خروج",
+  "email": "ایمیل",
+  "password": "رمز عبور",
+  "full_name": "نام کامل",
+  "phone_number": "شماره تلفن",
+  "language": "زبان",
+  "timezone": "منطقه زمانی",
+  "join_date": "تاریخ عضویت",
+  "login_btn": "ورود",
+  "register_btn": "ثبت‌نام",
+  "account_created": {
+    "title": "حساب کاربری ایجاد شد",
+    "description": "Proin in mi maximus، tempus libero vitae، hendrerit nisl. Curabitur posuere، augue a feugiat convallis."
+  },
+  "check_your_email": {
+    "title": "ایمیل خود را بررسی کنید",
+    "description": "اطلاعات لازم برای\nبازیابی رمز عبور برای شما ارسال شده است"
+  },
+  "login": {
+    "title": "وارد حساب کاربری خود شوید",
+    "dont_have_account": "حساب کاربری ندارید؟",
+    "sign_up": "ثبت‌نام",
+    "forgot_password": "رمز عبور را فراموش کرده‌اید؟",
+    "mfa_required": "احراز هویت دومرحله‌ای لازم است. لطفاً حساب خود را تأیید کنید.",
+    "success": "ورود با موفقیت انجام شد!"
+  },
+  "register": {
+    "title": "ثبت‌نام در اپلیکیشن Spora",
+    "already_have_account": "از قبل حساب دارید؟",
+    "sign_in": "ورود",
+    "your_email": "ایمیل شما",
+    "retype_password": "تکرار رمز عبور"
+  },
+  "reset_password": {
+    "title": "بازیابی رمز عبور",
+    "description": "ایمیل خود را وارد کنید تا دستورالعمل‌های بیشتری برای بازیابی رمز عبور برای شما ارسال شود.",
+    "continue_btn": "ادامه",
+    "return_to_sign_in": "بازگشت به ورود"
+  },
+  "mfa": {
+    "title": "تأیید احراز هویت دومرحله‌ای",
+    "description": "ما یک کد تأیید به ایمیل ثبت‌شده شما ارسال کرده‌ایم. لطفاً برای ادامه، کد ۴ رقمی را وارد کنید.",
+    "confirm_continue": "تأیید و ادامه",
+    "resend_code_in": "ارسال مجدد کد تا {} ثانیه دیگر",
+    "resend_code": "ارسال مجدد کد"
+  },
+  "dashboard": {
+    "error_loading": "هنگام بارگذاری داده‌ها خطایی رخ داد",
+    "connect_internet": "لطفاً به اینترنت متصل شوید و دوباره تلاش کنید",
+    "quick_actions": "اقدامات سریع",
+    "profile": {
+      "title": "پروفایل",
+      "subtitle": "مشاهده و به‌روزرسانی اطلاعات شما"
+    },
+    "security": {
+      "title": "امنیت و احراز هویت",
+      "subtitle": "به‌روزرسانی رمز عبور و تنظیمات MFA"
+    },
+    "settings": {
+      "title": "تنظیمات برنامه",
+      "subtitle": "زبان، تم و تنظیمات برنامه"
+    },
+    "hello": " سلام👋",
+    "account_status": "وضعیت حساب"
+  },
+  "profile": {
+    "title": "پروفایل",
+    "update_profile": "به‌روزرسانی پروفایل",
+    "active_account": "حساب فعال",
+    "unactive_account": "حساب غیرفعال"
+  },
+  "security": {
+    "title": "امنیت",
+    "password": {
+      "title": "رمز عبور",
+      "subtitle": "تغییر رمز عبور و ایمن‌سازی حساب شما"
+    },
+    "mfa": {
+      "title": "تنظیمات MFA",
+      "subtitle": "مدیریت احراز هویت"
+    }
+  },
+  "settings": {
+    "title": "تنظیمات",
+    "account": "حساب",
+    "profile": {
+      "title": "پروفایل",
+      "subtitle": "ویرایش اطلاعات شخصی و تصویر پروفایل"
+    },
+    "security_password": {
+      "title": "امنیت و رمز عبور",
+      "subtitle": "تغییر رمز عبور و ایمن‌سازی حساب شما"
+    },
+    "preferences": "ترجیحات",
+    "dark_mode": {
+      "title": "حالت تاریک",
+      "subtitle": "فعال‌سازی تم تاریک برای برنامه"
+    },
+    "language": "زبان",
+    "notifications": {
+      "title": "اعلان‌ها",
+      "subtitle": "کنترل هشدارها و صداهای اعلان"
+    },
+    "support_help": "پشتیبانی و راهنما",
+    "help_center": {
+      "title": "مرکز راهنما",
+      "subtitle": "سؤالات متداول و پشتیبانی فنی"
+    },
+    "about_app": {
+      "title": "درباره برنامه",
+      "subtitle": "شرایط، ضوابط و سیاست حفظ حریم خصوصی"
+    },
+    "select_language": "انتخاب زبان"
+  },
+  "logout_confirm": {
+    "title": "آیا از خروج مطمئن هستید؟",
+    "subtitle": "در ورود بعدی باید دوباره کد تأیید و رمز عبور را وارد کنید."
+  },
+  "device_capabilities": {
+    "section_title": "قابلیت‌های دستگاه",
+    "open_camera": "باز کردن دوربین",
+    "select_gallery": "انتخاب از گالری",
+    "get_location": "دریافت موقعیت فعلی",
+    "open_external_map": "باز کردن نقشه خارجی",
+    "pick_file": "انتخاب فایل",
+    "record_audio": "ضبط صدا",
+    "file_info": "جزئیات فایل",
+    "file_name": "نام فایل",
+    "file_path": "مسیر فایل",
+    "file_size": "حجم فایل",
+    "file_type": "نوع فایل",
+    "latitude": "عرض جغرافیایی",
+    "longitude": "طول جغرافیایی",
+    "accuracy": "دقت",
+    "retrieval_time": "زمان دریافت",
+    "start_recording": "شروع ضبط",
+    "stop_recording": "توقف ضبط",
+    "cancel_recording": "لغو ضبط",
+    "recording_in_progress": "در حال ضبط...",
+    "elapsed_time": "زمان سپری شده",
+    "play_audio": "پخش صدا",
+    "pause_audio": "توقف موقت",
+    "permission_required": "مجوز لازم است",
+    "permission_denied_msg": "مجوز رد شد. لطفاً برای استفاده از این قابلیت مجوز را صادر کنید.",
+    "permission_permanently_denied_msg": "مجوز به طور دائمی رد شده است. لطفاً آن را از تنظیمات برنامه فعال کنید.",
+    "open_settings": "باز کردن تنظیمات",
+    "location_disabled_msg": "سرویس موقعیت مکانی غیرفعال است. لطفاً GPS را روشن کنید.",
+    "location_timeout_msg": "دریافت موقعیت مکانی به دلیل پایان مهلت زمانی ناموفق بود.",
+    "no_location_yet_msg": "لطفاً قبل از باز کردن نقشه، ابتدا موقعیت فعلی را دریافت کنید.",
+    "no_map_app_msg": "هیچ برنامه‌ای برای باز کردن نقشه یافت نشد.",
+    "cancel": "لغو",
+    "close": "بستن",
+    "error_occurred": "خطای غیرمنتظره‌ای رخ داد."
+  }
+};
+static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en, "fa": _fa};
 }
