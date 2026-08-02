@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
 import '../models/media_file_model.dart';
 
@@ -19,72 +20,74 @@ class MediaPreviewSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  LocaleKeys.device_capabilities_file_info.tr(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Padding(
+        padding: REdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    LocaleKeys.device_capabilities_file_info.tr(),
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-            const Divider(),
-            if (_isImage) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(mediaFile.path),
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const SizedBox(
-                    height: 100,
-                    child: Icon(
-                      Icons.broken_image,
-                      size: 50,
-                      color: Colors.grey,
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const Divider(),
+              if (_isImage) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Image.file(
+                    File(mediaFile.path),
+                    height: 200.h,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => SizedBox(
+                      height: 100.h,
+                      child: Icon(
+                        Icons.broken_image,
+                        size: 50.sp,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
+                SizedBox(height: 16.h),
+              ],
+              _buildDetailRow(
+                LocaleKeys.device_capabilities_file_name.tr(),
+                mediaFile.name,
               ),
-              const SizedBox(height: 16),
+              _buildDetailRow(
+                LocaleKeys.device_capabilities_file_type.tr(),
+                mediaFile.fileType.toUpperCase(),
+              ),
+              _buildDetailRow(
+                LocaleKeys.device_capabilities_file_size.tr(),
+                mediaFile.formattedSize,
+              ),
+              _buildDetailRow(
+                LocaleKeys.device_capabilities_file_path.tr(),
+                mediaFile.path,
+              ),
+              SizedBox(height: 20.h),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(LocaleKeys.device_capabilities_close.tr()),
+              ),
             ],
-            _buildDetailRow(
-              LocaleKeys.device_capabilities_file_name.tr(),
-              mediaFile.name,
-            ),
-            _buildDetailRow(
-              LocaleKeys.device_capabilities_file_type.tr(),
-              mediaFile.fileType.toUpperCase(),
-            ),
-            _buildDetailRow(
-              LocaleKeys.device_capabilities_file_size.tr(),
-              mediaFile.formattedSize,
-            ),
-            _buildDetailRow(
-              LocaleKeys.device_capabilities_file_path.tr(),
-              mediaFile.path,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(LocaleKeys.device_capabilities_close.tr()),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -92,13 +95,21 @@ class MediaPreviewSheet extends StatelessWidget {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            '$label: ',
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+          ),
           Expanded(
-            child: Text(value, maxLines: 2, overflow: TextOverflow.ellipsis),
+            child: Text(
+              value,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14.sp),
+            ),
           ),
         ],
       ),

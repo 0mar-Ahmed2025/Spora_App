@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 20.h),
+      padding:  REdgeInsets.only(top: 20.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,7 +30,7 @@ class CustomAppBar extends StatelessWidget {
               Text(LocaleKeys.dashboard_hello.tr()),
               SizedBox(height: 4.h),
               Text(
-                userData.displayName,
+                AppMethods.getFullName(userData),
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
