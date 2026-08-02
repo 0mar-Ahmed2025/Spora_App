@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spora_app/features/device_capabilities/services/audio_recorder_service.dart';
 import 'package:spora_app/features/device_capabilities/services/camera_gallery_service.dart';
 import 'package:spora_app/features/device_capabilities/services/file_picker_service.dart';
@@ -86,10 +87,10 @@ class DeviceCapabilitiesSection extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
-                padding: const EdgeInsets.all(12.0),
+                padding: REdgeInsets.all(12),
                 childAspectRatio: 1.3,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 10.w,
+                mainAxisSpacing: 10.h,
                 children: [
                   DeviceCapabilityTile(
                     title: LocaleKeys.device_capabilities_open_camera.tr(),
@@ -130,6 +131,7 @@ class DeviceCapabilitiesSection extends StatelessWidget {
                       showModalBottomSheet(
                         context: context,
                         isDismissible: false,
+                        isScrollControlled: true,
                         builder: (_) => BlocProvider.value(
                           value: cubit,
                           child: const AudioRecorderSheet(),

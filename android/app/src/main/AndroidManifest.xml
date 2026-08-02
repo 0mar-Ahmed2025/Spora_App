@@ -7,12 +7,10 @@
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 <queries>
-        <!-- لدعم الـ Intent الخاص بالـ geo: -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="geo" />
         </intent>
-        <!-- لدعم فتح Google Maps عبر المتصفح/التطبيق بـ https -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />

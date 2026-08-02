@@ -26,7 +26,10 @@ class MockMapLauncherService extends Mock implements MapLauncherService {}
 
 class MockFilePickerService extends Mock implements FilePickerService {}
 
-class MockAudioRecorderService extends Mock implements AudioRecorderService {}
+class MockAudioRecorderService extends Mock implements AudioRecorderService {
+  @override
+  Future<void> dispose() async {}
+}
 
 void main() {
   late DeviceCapabilitiesCubit cubit;
@@ -44,7 +47,6 @@ void main() {
     mockMapLauncherService = MockMapLauncherService();
     mockFilePickerService = MockFilePickerService();
     mockAudioRecorderService = MockAudioRecorderService();
-
     cubit = DeviceCapabilitiesCubit(
       permissionService: mockPermissionService,
       cameraGalleryService: mockCameraGalleryService,
@@ -55,8 +57,8 @@ void main() {
     );
   });
 
-  tearDown(() {
-    cubit.close();
+  tearDown(() async {
+    await cubit.close();
   });
 
   group('Camera Tests', () {
@@ -192,7 +194,10 @@ void main() {
         await cubit.startAudioRecording();
         await cubit.stopAudioRecording();
       },
-      expect: () => [isA<DeviceAudioRecordSuccess>()],
+      expect: () => [
+        isA<DeviceAudioRecordingInProgress>(),
+        isA<DeviceAudioRecordSuccess>(),
+      ],
     );
 
     blocTest<DeviceCapabilitiesCubit, DeviceCapabilitiesState>(
@@ -219,7 +224,10 @@ void main() {
         await cubit.startAudioRecording();
         await cubit.stopAudioRecording();
       },
-      expect: () => [isA<DeviceAudioRecordSuccess>()],
+      expect: () => [
+        isA<DeviceAudioRecordingInProgress>(),
+        isA<DeviceAudioRecordSuccess>(),
+      ],
       verify: (_) {
         verify(() => mockAudioRecorderService.startRecording()).called(1);
       },
@@ -243,7 +251,10 @@ void main() {
         await cubit.startAudioRecording();
         await cubit.cancelAudioRecording();
       },
-      expect: () => [isA<DeviceOperationCancelled>()],
+      expect: () => [
+        isA<DeviceAudioRecordingInProgress>(),
+        isA<DeviceOperationCancelled>(),
+      ],
     );
   });
 

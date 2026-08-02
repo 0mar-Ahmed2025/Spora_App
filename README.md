@@ -185,6 +185,7 @@ Screenshots and screen recording are included with the submission.
 - External map opening uses Android intents/URLs and falls back to Google Maps web URL when no `geo:` handler is available.
 - Audio playback is not implemented.
 - Multi-image gallery selection, image compression, map preview, and diagnostics screen are not implemented.
+- * **File Picker & Modern Android Storage**: On Android 13+ (API 33+), file selection uses the system-native Storage Access Framework (SAF). As per Google's official privacy guidelines, implicit read permission is granted upon user selection without requiring legacy runtime `READ_EXTERNAL_STORAGE` dialogs.
 
 ## Backend Limitations
 

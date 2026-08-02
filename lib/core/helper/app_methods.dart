@@ -202,4 +202,9 @@ abstract class AppMethods {
     if (userData.lastName.isNotEmpty) initials += userData.lastName[0];
     return initials.isEmpty ? "?" : initials.toUpperCase();
   }
+
+  static String getFullName(UserData userData) {
+    String fullName = "${userData.firstName} ${userData.lastName}".trim();
+    return fullName.isEmpty ? "Unknown User" : fullName;
+  }
 }
