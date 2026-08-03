@@ -25,7 +25,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("LocaleKeys.report_queue_title.tr()"),
+        title: Text(LocaleKeys.report_queue_title.tr()),
         actions: [
           IconButton(
             icon: const Icon(Icons.sync),
@@ -47,7 +47,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                 color: Colors.grey.shade200,
                 child: Row(
                   children: [
-                    Text("LocaleKeys.fake_mode_label.tr()"),
+                    Text(LocaleKeys.fake_mode_label.tr()),
                     const SizedBox(width: 8),
                     Expanded(
                       child: DropdownButton<FakeServiceMode>(
@@ -73,7 +73,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                 child: Row(
                   children: [
                     FilterChip(
-                      label: Text("LocaleKeys.filter_all.tr()"),
+                      label: Text(LocaleKeys.filter_all.tr()),
                       selected: state.filterStatus == null,
                       onSelected: (_) => cubit.setFilter(null),
                     ),
@@ -94,7 +94,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                 child: state.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : state.filteredReports.isEmpty
-                    ? Center(child: Text("LocaleKeys.no_reports_found.tr()"))
+                    ? Center(child: Text(LocaleKeys.no_reports_found.tr()))
                     : ListView.builder(
                         itemCount: state.filteredReports.length,
                         itemBuilder: (context, index) {
@@ -124,11 +124,11 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                   ),
                                   if (report.lastError != null)
                                     Text(
-                                      '${"LocaleKeys.error_label.tr()"}: ${report.lastError!.tr()}',
+                                      '${LocaleKeys.error_label.tr()}: ${report.lastError!.tr()}',
                                       style: const TextStyle(color: Colors.red),
                                     ),
                                   Text(
-                                    '${"LocaleKeys.retries_label.tr()"}: ${report.retryCount}',
+                                    '${LocaleKeys.retries_label.tr()}: ${report.retryCount}',
                                   ),
                                 ],
                               ),
