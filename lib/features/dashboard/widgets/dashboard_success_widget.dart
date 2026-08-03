@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spora_app/core/shared/logout_button.dart';
 import 'package:spora_app/core/theme/app_colors.dart';
@@ -11,6 +12,13 @@ import 'package:spora_app/features/dashboard/views/security_view.dart';
 import 'package:spora_app/features/dashboard/widgets/custom_account_status_widget.dart';
 import 'package:spora_app/features/dashboard/widgets/custom_app_bar_widget.dart';
 import 'package:spora_app/features/dashboard/widgets/quick_access_tile_widget.dart';
+import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
+import 'package:spora_app/features/reports/data/datasources/local_report_data_source.dart';
+import 'package:spora_app/features/reports/domain/repositories/report_repository_impl.dart';
+import 'package:spora_app/features/reports/presentation/cubits/create_report/create_report_cubit.dart';
+import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_cubit.dart';
+import 'package:spora_app/features/reports/presentation/views/create_report_page.dart';
+import 'package:spora_app/features/reports/presentation/views/report_queue_page.dart';
 import 'package:spora_app/features/settings/view/setting_view.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
 
@@ -112,6 +120,65 @@ class DashboardSuccessStateWidget extends StatelessWidget {
                   builder: (context) {
                     return SettingsScreen();
                   },
+                ),
+              );
+            },
+          ),
+          QuickAccessTile(
+            sporaBackgroundGray: tileBackground,
+            sporaPurple: AppColors.primary,
+            sporaTextDark: textPrimary,
+            sporaTextMuted: textSecondary,
+            icon: Icons.add,
+            title: LocaleKeys.create_report_title.tr(),
+            subtitle: LocaleKeys.create_report_title.tr(),
+            onTap: () {
+              final localDataSource = LocalReportDataSourceImpl();
+              final remoteDataSource = FakeReportRemoteDataSourceImpl();
+              final repository = ReportRepositoryImpl(
+                localDataSource: localDataSource,
+                remoteDataSource: remoteDataSource,
+              );
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BlocProvider(
+                    create: (_) => CreateReportCubit(repository: repository),
+                    child: const CreateReportPage(),
+                  ),
+                ),
+              );
+            },
+          ),
+          SizedBox(height: 12.h),
+
+          QuickAccessTile(
+            sporaBackgroundGray: tileBackground,
+            sporaPurple: AppColors.primary,
+            sporaTextDark: textPrimary,
+            sporaTextMuted: textSecondary,
+            icon: Icons.format_list_bulleted_outlined,
+            title: LocaleKeys.report_queue_title.tr(),
+            subtitle: LocaleKeys.report_queue_title.tr(),
+            onTap: () {
+              final localDataSource = LocalReportDataSourceImpl();
+              final remoteDataSource = FakeReportRemoteDataSourceImpl();
+              final repository = ReportRepositoryImpl(
+                localDataSource: localDataSource,
+                remoteDataSource: remoteDataSource,
+              );
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BlocProvider(
+                    create: (_) => ReportQueueCubit(
+                      repository: repository,
+                      remoteDataSource: remoteDataSource,
+                    ),
+                    child: const ReportQueuePage(),
+                  ),
                 ),
               );
             },
