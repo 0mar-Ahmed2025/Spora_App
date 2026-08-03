@@ -251,7 +251,7 @@ class DeviceCapabilitiesCubit extends Cubit<DeviceCapabilitiesState> {
     await _permissionService.openSettings();
   }
 
-  @override
+    @override
   Future<void> close() async {
     _recordingTimer?.cancel();
 
