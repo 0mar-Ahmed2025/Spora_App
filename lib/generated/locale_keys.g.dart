@@ -153,6 +153,10 @@ abstract class  LocaleKeys {
   static const btn_camera = 'btn_camera';
   static const btn_gallery = 'btn_gallery';
   static const btn_save = 'btn_save';
+  static const field_location = 'field_location';
+  static const btn_get_location = 'btn_get_location';
+  static const location_fetched = 'location_fetched';
+  static const location_cleared = 'location_cleared';
   static const report_queue_title = 'report_queue_title';
   static const fake_mode_label = 'fake_mode_label';
   static const filter_all = 'filter_all';
@@ -184,5 +188,14 @@ abstract class  LocaleKeys {
   static const file_missing = 'file_missing';
   static const storage_error = 'storage_error';
   static const unknown_error = 'unknown_error';
+  static const report_details = 'report_details';
+  static const detail_created_at = 'detail_created_at';
+  static const detail_updated_at = 'detail_updated_at';
+  static const detail_server_id = 'detail_server_id';
+  static const detail_coordinates = 'detail_coordinates';
+  static const detail_no_location = 'detail_no_location';
+  static const detail_no_image = 'detail_no_image';
+  static const btn_edit = 'btn_edit';
+  static const report_updated_success = 'report_updated_success';
 
 }

@@ -188,6 +188,10 @@ class CodegenLoader extends AssetLoader{
   "btn_camera": "الكاميرا",
   "btn_gallery": "المعرض",
   "btn_save": "حفظ البلاغ",
+  "field_location": "الموقع",
+  "btn_get_location": "جلب الموقع",
+  "location_fetched": "تم جلب الموقع",
+  "location_cleared": "تم مسح الموقع",
   "report_queue_title": "طابور البلاغات",
   "fake_mode_label": "وضع السيرفر المحاكي:",
   "filter_all": "الكل",
@@ -218,7 +222,16 @@ class CodegenLoader extends AssetLoader{
   "validation_error": "خطأ في البيانات. قم بتعديل البلاغ للإعادة.",
   "file_missing": "ملف الصورة المرفق غير موجود.",
   "storage_error": "فشل الحفظ محلياً.",
-  "unknown_error": "حدث خطأ غير معروف."
+  "unknown_error": "حدث خطأ غير معروف.",
+  "report_details": "تفاصيل البلاغ",
+  "detail_created_at": "تاريخ الإنشاء",
+  "detail_updated_at": "آخر تحديث",
+  "detail_server_id": "معرف السيرفر",
+  "detail_coordinates": "الإحداثيات",
+  "detail_no_location": "لا يوجد موقع",
+  "detail_no_image": "لا توجد صورة مرفقة",
+  "btn_edit": "تعديل",
+  "report_updated_success": "تم تحديث البلاغ بنجاح"
 };
 static const Map<String,dynamic> _en = {
   "spora": "S P O R A",
@@ -394,6 +407,10 @@ static const Map<String,dynamic> _en = {
   "btn_camera": "Camera",
   "btn_gallery": "Gallery",
   "btn_save": "Save Report",
+  "field_location": "Location",
+  "btn_get_location": "Get Location",
+  "location_fetched": "Location fetched",
+  "location_cleared": "Location cleared",
   "report_queue_title": "Report Queue",
   "fake_mode_label": "Fake Service Mode:",
   "filter_all": "All",
@@ -424,7 +441,16 @@ static const Map<String,dynamic> _en = {
   "validation_error": "Validation failed. Edit report to retry.",
   "file_missing": "Attached image file is missing.",
   "storage_error": "Failed to save locally.",
-  "unknown_error": "An unknown error occurred."
+  "unknown_error": "An unknown error occurred.",
+  "report_details": "Report Details",
+  "detail_created_at": "Created",
+  "detail_updated_at": "Updated",
+  "detail_server_id": "Server ID",
+  "detail_coordinates": "Coordinates",
+  "detail_no_location": "No location",
+  "detail_no_image": "No image attached",
+  "btn_edit": "Edit",
+  "report_updated_success": "Report updated successfully"
 };
 static const Map<String,dynamic> _fa = {
   "spora": "S P O R A",
@@ -600,6 +626,10 @@ static const Map<String,dynamic> _fa = {
   "btn_camera": "دوربین",
   "btn_gallery": "گالری",
   "btn_save": "ذخیره گزارش",
+  "field_location": "موقعیت",
+  "btn_get_location": "دریافت موقعیت",
+  "location_fetched": "موقعیت دریافت شد",
+  "location_cleared": "موقعیت پاک شد",
   "report_queue_title": "صف گزارش‌ها",
   "fake_mode_label": "حالت سرور آزمایشی:",
   "filter_all": "همه",
@@ -630,7 +660,16 @@ static const Map<String,dynamic> _fa = {
   "validation_error": "اعتبارسنجی ناموفق بود. گزارش را ویرایش کنید.",
   "file_missing": "فایل تصویر پیدا نشد.",
   "storage_error": "خطا در ذخیره‌سازی محلی.",
-  "unknown_error": "خطای ناشناخته رخ داد."
+  "unknown_error": "خطای ناشناخته رخ داد.",
+  "report_details": "جزئیات گزارش",
+  "detail_created_at": "تاریخ ایجاد",
+  "detail_updated_at": "آخرین به‌روزرسانی",
+  "detail_server_id": "شناسه سرور",
+  "detail_coordinates": "مختصات",
+  "detail_no_location": "بدون موقعیت",
+  "detail_no_image": "تصویری پیوست نشده",
+  "btn_edit": "ویرایش",
+  "report_updated_success": "گزارش با موفقیت به‌روزرسانی شد"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en, "fa": _fa};
 }

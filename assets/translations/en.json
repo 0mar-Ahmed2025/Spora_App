@@ -172,6 +172,10 @@
   "btn_camera": "Camera",
   "btn_gallery": "Gallery",
   "btn_save": "Save Report",
+  "field_location": "Location",
+  "btn_get_location": "Get Location",
+  "location_fetched": "Location fetched",
+  "location_cleared": "Location cleared",
   "report_queue_title": "Report Queue",
   "fake_mode_label": "Fake Service Mode:",
   "filter_all": "All",
@@ -202,5 +206,14 @@
   "validation_error": "Validation failed. Edit report to retry.",
   "file_missing": "Attached image file is missing.",
   "storage_error": "Failed to save locally.",
-  "unknown_error": "An unknown error occurred."
+  "unknown_error": "An unknown error occurred.",
+  "report_details": "Report Details",
+  "detail_created_at": "Created",
+  "detail_updated_at": "Updated",
+  "detail_server_id": "Server ID",
+  "detail_coordinates": "Coordinates",
+  "detail_no_location": "No location",
+  "detail_no_image": "No image attached",
+  "btn_edit": "Edit",
+  "report_updated_success": "Report updated successfully"
 }

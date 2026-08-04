@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, deprecated_member_use
 
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,14 +9,17 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:spora_app/features/device_capabilities/services/location_service.dart';
 import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
 import 'package:spora_app/features/reports/data/datasources/local_report_data_source.dart';
+import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository_impl.dart';
-import 'package:spora_app/features/reports/presentation/cubits/create_report/create_report_cubit.dart';
-import 'package:spora_app/features/reports/presentation/cubits/create_report/create_report_state.dart';
+import 'package:spora_app/features/reports/presentation/cubits/edit_report/edit_report_cubit.dart';
+import 'package:spora_app/features/reports/presentation/cubits/edit_report/edit_report_state.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
 
-class CreateReportPage extends StatelessWidget {
-  const CreateReportPage({super.key});
+class EditReportPage extends StatelessWidget {
+  const EditReportPage({super.key, required this.report});
+
+  final LocalReportModel report;
 
   static const List<Map<String, String>> categories = [
     {'id': 'technical', 'nameKey': 'category_technical'},
@@ -29,7 +32,7 @@ class CreateReportPage extends StatelessWidget {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
     if (pickedFile != null && context.mounted) {
-      context.read<CreateReportCubit>().imageSelected(pickedFile.path);
+      context.read<EditReportCubit>().imageSelected(pickedFile.path);
     }
   }
 
@@ -38,7 +41,11 @@ class CreateReportPage extends StatelessWidget {
     if (!status.isGranted) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(LocaleKeys.device_capabilities_permission_denied_msg.tr())),
+          SnackBar(
+            content: Text(
+              LocaleKeys.device_capabilities_permission_denied_msg.tr(),
+            ),
+          ),
         );
       }
       return;
@@ -48,9 +55,11 @@ class CreateReportPage extends StatelessWidget {
       final locationService = LocationServiceImpl();
       final locationData = await locationService.getCurrentLocation();
       if (context.mounted) {
-        context.read<CreateReportCubit>().locationFetched(
-          locationData.latitude,
-          locationData.longitude,
+        context.read<EditReportCubit>().emit(
+          context.read<EditReportCubit>().state.copyWith(
+            latitude: locationData.latitude,
+            longitude: locationData.longitude,
+          ),
         );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(LocaleKeys.location_fetched.tr())),
@@ -59,7 +68,9 @@ class CreateReportPage extends StatelessWidget {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(LocaleKeys.device_capabilities_error_occurred.tr())),
+          SnackBar(
+            content: Text(LocaleKeys.device_capabilities_error_occurred.tr()),
+          ),
         );
       }
     }
@@ -68,19 +79,19 @@ class CreateReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(LocaleKeys.create_report_title.tr())),
+      appBar: AppBar(title: Text(LocaleKeys.btn_edit.tr())),
       body: BlocProvider(
-        create: (context) => CreateReportCubit(
+        create: (context) => EditReportCubit(
           repository: ReportRepositoryImpl(
-            localDataSource: LocalReportDataSourceImpl(),
             remoteDataSource: FakeReportRemoteDataSourceImpl(),
+            localDataSource: LocalReportDataSourceImpl(),
           ),
-        ),
-        child: BlocConsumer<CreateReportCubit, CreateReportState>(
+        )..loadReport(report),
+        child: BlocConsumer<EditReportCubit, EditReportState>(
           listener: (context, state) {
             if (state.isSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(LocaleKeys.report_saved_success.tr())),
+                SnackBar(content: Text(LocaleKeys.report_updated_success.tr())),
               );
               Navigator.pop(context);
             }
@@ -91,7 +102,7 @@ class CreateReportPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            final cubit = context.read<CreateReportCubit>();
+            final cubit = context.read<EditReportCubit>();
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
@@ -99,6 +110,7 @@ class CreateReportPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   TextField(
+                    controller: TextEditingController(text: state.title),
                     onChanged: cubit.titleChanged,
                     decoration: InputDecoration(
                       labelText: LocaleKeys.field_title.tr(),
@@ -109,6 +121,7 @@ class CreateReportPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextField(
+                    controller: TextEditingController(text: state.description),
                     onChanged: cubit.descriptionChanged,
                     maxLines: 4,
                     decoration: InputDecoration(
@@ -202,7 +215,8 @@ class CreateReportPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        if (state.latitude != null && state.longitude != null) ...[
+                        if (state.latitude != null &&
+                            state.longitude != null) ...[
                           Text(
                             'Lat: ${state.latitude!.toStringAsFixed(6)}, Lng: ${state.longitude!.toStringAsFixed(6)}',
                             style: TextStyle(color: Colors.grey.shade700),
@@ -214,7 +228,11 @@ class CreateReportPage extends StatelessWidget {
                               onPressed: () {
                                 cubit.locationCleared();
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(LocaleKeys.location_cleared.tr())),
+                                  SnackBar(
+                                    content: Text(
+                                      LocaleKeys.location_cleared.tr(),
+                                    ),
+                                  ),
                                 );
                               },
                               icon: const Icon(Icons.clear, size: 16),
@@ -236,7 +254,7 @@ class CreateReportPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: state.isValid && !state.isSubmitting
-                        ? () => cubit.submitReport()
+                        ? () => cubit.updateReport()
                         : null,
                     child: state.isSubmitting
                         ? const CircularProgressIndicator()

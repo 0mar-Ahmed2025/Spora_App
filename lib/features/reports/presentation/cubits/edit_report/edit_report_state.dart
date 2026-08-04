@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 
-class CreateReportState extends Equatable {
+class EditReportState extends Equatable {
+  final String? localId;
   final String title;
   final String description;
   final String? categoryId;
@@ -9,11 +10,13 @@ class CreateReportState extends Equatable {
   final String? imagePath;
   final double? latitude;
   final double? longitude;
+  final ReportStatusEnum originalStatus;
   final bool isSubmitting;
   final bool isSuccess;
   final String? errorMessage;
 
-  const CreateReportState({
+  const EditReportState({
+    this.localId,
     this.title = '',
     this.description = '',
     this.categoryId,
@@ -21,6 +24,7 @@ class CreateReportState extends Equatable {
     this.imagePath,
     this.latitude,
     this.longitude,
+    this.originalStatus = ReportStatusEnum.draft,
     this.isSubmitting = false,
     this.isSuccess = false,
     this.errorMessage,
@@ -33,7 +37,7 @@ class CreateReportState extends Equatable {
   bool get isCategoryValid => categoryId != null && categoryId!.isNotEmpty;
   bool get isValid => isTitleValid && isDescriptionValid && isCategoryValid;
 
-  CreateReportState copyWith({
+  EditReportState copyWith({
     String? title,
     String? description,
     String? categoryId,
@@ -46,7 +50,8 @@ class CreateReportState extends Equatable {
     bool? isSuccess,
     String? errorMessage,
   }) {
-    return CreateReportState(
+    return EditReportState(
+      localId: localId,
       title: title ?? this.title,
       description: description ?? this.description,
       categoryId: categoryId ?? this.categoryId,
@@ -54,6 +59,7 @@ class CreateReportState extends Equatable {
       imagePath: imagePath ?? this.imagePath,
       latitude: clearLocation ? null : (latitude ?? this.latitude),
       longitude: clearLocation ? null : (longitude ?? this.longitude),
+      originalStatus: originalStatus,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       errorMessage: errorMessage,
@@ -62,6 +68,7 @@ class CreateReportState extends Equatable {
 
   @override
   List<Object?> get props => [
+    localId,
     title,
     description,
     categoryId,
@@ -69,6 +76,7 @@ class CreateReportState extends Equatable {
     imagePath,
     latitude,
     longitude,
+    originalStatus,
     isSubmitting,
     isSuccess,
     errorMessage,

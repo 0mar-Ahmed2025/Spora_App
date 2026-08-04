@@ -172,6 +172,10 @@
   "btn_camera": "الكاميرا",
   "btn_gallery": "المعرض",
   "btn_save": "حفظ البلاغ",
+  "field_location": "الموقع",
+  "btn_get_location": "جلب الموقع",
+  "location_fetched": "تم جلب الموقع",
+  "location_cleared": "تم مسح الموقع",
   "report_queue_title": "طابور البلاغات",
   "fake_mode_label": "وضع السيرفر المحاكي:",
   "filter_all": "الكل",
@@ -202,5 +206,14 @@
   "validation_error": "خطأ في البيانات. قم بتعديل البلاغ للإعادة.",
   "file_missing": "ملف الصورة المرفق غير موجود.",
   "storage_error": "فشل الحفظ محلياً.",
-  "unknown_error": "حدث خطأ غير معروف."
+  "unknown_error": "حدث خطأ غير معروف.",
+  "report_details": "تفاصيل البلاغ",
+  "detail_created_at": "تاريخ الإنشاء",
+  "detail_updated_at": "آخر تحديث",
+  "detail_server_id": "معرف السيرفر",
+  "detail_coordinates": "الإحداثيات",
+  "detail_no_location": "لا يوجد موقع",
+  "detail_no_image": "لا توجد صورة مرفقة",
+  "btn_edit": "تعديل",
+  "report_updated_success": "تم تحديث البلاغ بنجاح"
 }

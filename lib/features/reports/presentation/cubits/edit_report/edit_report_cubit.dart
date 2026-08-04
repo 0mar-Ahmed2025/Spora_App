@@ -2,17 +2,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository.dart';
-import 'package:spora_app/features/reports/presentation/cubits/create_report/create_report_state.dart';
-import 'package:uuid/uuid.dart';
+import 'package:spora_app/features/reports/presentation/cubits/edit_report/edit_report_state.dart';
 
-class CreateReportCubit extends Cubit<CreateReportState> {
+class EditReportCubit extends Cubit<EditReportState> {
   final ReportRepository _repository;
-  final Uuid _uuid;
 
-  CreateReportCubit({required ReportRepository repository, Uuid? uuid})
+  EditReportCubit({required ReportRepository repository})
     : _repository = repository,
-      _uuid = uuid ?? const Uuid(),
-      super(const CreateReportState());
+      super(const EditReportState());
+
+  void loadReport(LocalReportModel report) {
+    emit(
+      EditReportState(
+        localId: report.localId,
+        title: report.title,
+        description: report.description,
+        categoryId: report.categoryId,
+        priority: report.priority,
+        imagePath: report.imagePath,
+        latitude: report.latitude,
+        longitude: report.longitude,
+        originalStatus: report.status,
+      ),
+    );
+  }
 
   void titleChanged(String value) {
     emit(state.copyWith(title: value));
@@ -34,23 +47,26 @@ class CreateReportCubit extends Cubit<CreateReportState> {
     emit(state.copyWith(imagePath: path));
   }
 
-  void locationFetched(double lat, double lng) {
-    emit(state.copyWith(latitude: lat, longitude: lng));
-  }
-
   void locationCleared() {
     emit(state.copyWith(clearLocation: true));
   }
 
-  Future<void> submitReport() async {
+  void updateLocation(double lat, double lng) {
+    emit(state.copyWith(latitude: lat, longitude: lng));
+  }
+
+  Future<void> updateReport() async {
     if (!state.isValid || state.isSubmitting) return;
 
     emit(state.copyWith(isSubmitting: true, errorMessage: null));
 
     try {
-      final now = DateTime.now();
-      final newReport = LocalReportModel(
-        localId: _uuid.v4(),
+      final existingReport = await _repository.getAllReports();
+      final report = existingReport.firstWhere(
+        (r) => r.localId == state.localId,
+      );
+
+      final updatedReport = report.copyWith(
         title: state.title.trim(),
         description: state.description.trim(),
         categoryId: state.categoryId!,
@@ -59,11 +75,11 @@ class CreateReportCubit extends Cubit<CreateReportState> {
         latitude: state.latitude,
         longitude: state.longitude,
         status: ReportStatusEnum.queued,
-        createdAt: now,
-        updatedAt: now,
+        lastError: null,
+        updatedAt: DateTime.now(),
       );
 
-      await _repository.createReport(newReport);
+      await _repository.updateReport(updatedReport);
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
       emit(state.copyWith(isSubmitting: false, errorMessage: 'storage_error'));
