@@ -5,6 +5,8 @@ import 'package:spora_app/features/reports/data/datasources/fake_report_remote_d
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_cubit.dart';
 import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_state.dart';
+import 'package:spora_app/features/reports/presentation/views/report_details_page.dart';
+import 'package:spora_app/features/reports/presentation/views/edit_report_page.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
 
 class ReportQueuePage extends StatefulWidget {
@@ -105,6 +107,16 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                               vertical: 6,
                             ),
                             child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ReportDetailsPage(
+                                      report: report,
+                                    ),
+                                  ),
+                                );
+                              },
                               title: Text(
                                 report.title,
                                 style: const TextStyle(
@@ -147,6 +159,26 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                       ),
                                       onPressed: () =>
                                           cubit.retryReport(report.localId),
+                                    ),
+                                  if (report.status == ReportStatusEnum.draft ||
+                                      (report.status == ReportStatusEnum.failed &&
+                                          report.lastError == 'validation_error'))
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
+                                      ),
+                                      onPressed: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => EditReportPage(
+                                              report: report,
+                                            ),
+                                          ),
+                                        );
+                                        cubit.loadReports();
+                                      },
                                     ),
                                   if (report.status == ReportStatusEnum.draft)
                                     IconButton(

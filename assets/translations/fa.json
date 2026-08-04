@@ -172,6 +172,10 @@
   "btn_camera": "دوربین",
   "btn_gallery": "گالری",
   "btn_save": "ذخیره گزارش",
+  "field_location": "موقعیت",
+  "btn_get_location": "دریافت موقعیت",
+  "location_fetched": "موقعیت دریافت شد",
+  "location_cleared": "موقعیت پاک شد",
   "report_queue_title": "صف گزارش‌ها",
   "fake_mode_label": "حالت سرور آزمایشی:",
   "filter_all": "همه",
@@ -202,5 +206,14 @@
   "validation_error": "اعتبارسنجی ناموفق بود. گزارش را ویرایش کنید.",
   "file_missing": "فایل تصویر پیدا نشد.",
   "storage_error": "خطا در ذخیره‌سازی محلی.",
-  "unknown_error": "خطای ناشناخته رخ داد."
+  "unknown_error": "خطای ناشناخته رخ داد.",
+  "report_details": "جزئیات گزارش",
+  "detail_created_at": "تاریخ ایجاد",
+  "detail_updated_at": "آخرین به‌روزرسانی",
+  "detail_server_id": "شناسه سرور",
+  "detail_coordinates": "مختصات",
+  "detail_no_location": "بدون موقعیت",
+  "detail_no_image": "تصویری پیوست نشده",
+  "btn_edit": "ویرایش",
+  "report_updated_success": "گزارش با موفقیت به‌روزرسانی شد"
 }
