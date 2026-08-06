@@ -42,31 +42,41 @@ class CreateReportCubit extends Cubit<CreateReportState> {
     emit(state.copyWith(clearLocation: true));
   }
 
-  Future<void> submitReport() async {
-    if (!state.isValid || state.isSubmitting) return;
+  Future<void> submitReport({required bool saveAsDraft}) async {
+  if (!saveAsDraft && !state.isValid) return;
+  if (state.isSubmitting) return;
 
-    emit(state.copyWith(isSubmitting: true, errorMessage: null));
+  emit(state.copyWith(isSubmitting: true, errorMessage: null));
 
-    try {
-      final now = DateTime.now();
-      final newReport = LocalReportModel(
-        localId: _uuid.v4(),
-        title: state.title.trim(),
-        description: state.description.trim(),
-        categoryId: state.categoryId!,
-        priority: state.priority,
-        imagePath: state.imagePath,
-        latitude: state.latitude,
-        longitude: state.longitude,
-        status: ReportStatusEnum.queued,
-        createdAt: now,
-        updatedAt: now,
-      );
+  try {
+    final now = DateTime.now();
+    final status = saveAsDraft ? ReportStatusEnum.draft : ReportStatusEnum.queued;
 
-      await _repository.createReport(newReport);
-      emit(state.copyWith(isSubmitting: false, isSuccess: true));
-    } catch (e) {
-      emit(state.copyWith(isSubmitting: false, errorMessage: 'storage_error'));
-    }
+    final newReport = LocalReportModel(
+      localId: _uuid.v4(),
+      title: state.title.trim(),
+      description: state.description.trim(),
+      categoryId: state.categoryId ?? 'technical',
+      priority: state.priority,
+      imagePath: state.imagePath,
+      latitude: state.latitude,
+      longitude: state.longitude,
+      status: status,
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    await _repository.createReport(newReport);
+
+
+    emit(state.copyWith(isSubmitting: false, isSuccess: true));
+  } catch (e) {
+    emit(state.copyWith(isSubmitting: false, errorMessage: 'storage_error'));
   }
+}
+
+
+
+
+
 }

@@ -188,6 +188,7 @@ class CodegenLoader extends AssetLoader{
   "btn_camera": "الكاميرا",
   "btn_gallery": "المعرض",
   "btn_save": "حفظ البلاغ",
+  "btn_save_draft": "حفظ كمسودة",
   "field_location": "الموقع",
   "btn_get_location": "جلب الموقع",
   "location_fetched": "تم جلب الموقع",
@@ -258,7 +259,7 @@ static const Map<String,dynamic> _en = {
   },
   "check_your_email": {
     "title": "Check your e-mail",
-    "description": "We have sent you informations to\nreset your password"
+    "description": "We have sent you information to\nreset your password"
   },
   "login": {
     "title": "Login into your account",
@@ -277,7 +278,7 @@ static const Map<String,dynamic> _en = {
   },
   "reset_password": {
     "title": "Reset password",
-    "description": "Enter your e-mail address and we will send you futher instructions on how to reset the password.",
+    "description": "Enter your e-mail address and we will send you further instructions on how to reset the password.",
     "continue_btn": "Continue",
     "return_to_sign_in": "Return to Sign In"
   },
@@ -407,6 +408,7 @@ static const Map<String,dynamic> _en = {
   "btn_camera": "Camera",
   "btn_gallery": "Gallery",
   "btn_save": "Save Report",
+  "btn_save_draft": "Save as Draft",
   "field_location": "Location",
   "btn_get_location": "Get Location",
   "location_fetched": "Location fetched",
@@ -626,6 +628,7 @@ static const Map<String,dynamic> _fa = {
   "btn_camera": "دوربین",
   "btn_gallery": "گالری",
   "btn_save": "ذخیره گزارش",
+  "btn_save_draft": "ذخیره به عنوان پیش‌نویس",
   "field_location": "موقعیت",
   "btn_get_location": "دریافت موقعیت",
   "location_fetched": "موقعیت دریافت شد",

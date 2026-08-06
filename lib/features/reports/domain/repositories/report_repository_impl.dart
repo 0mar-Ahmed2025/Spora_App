@@ -8,8 +8,8 @@ import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository.dart';
 
 class ReportRepositoryImpl implements ReportRepository {
-  final LocalReportDataSource _localDataSource;
-  final ReportRemoteDataSource _remoteDataSource;
+  final LocalReportDataSource _localDataSource; // Local database
+  final ReportRemoteDataSource _remoteDataSource; // Server-side
   final Set<String> _processingIds = {};
 
   ReportRepositoryImpl({
@@ -23,13 +23,14 @@ class ReportRepositoryImpl implements ReportRepository {
     final permanentImagePath = await FileHelper.saveImagePermanently(
       report.imagePath,
     );
-    final reportToSave = report.copyWith(
-      imagePath: permanentImagePath,
-      status: ReportStatusEnum.queued,
-    );
+
+    final reportToSave = report.copyWith(imagePath: permanentImagePath);
 
     await _localDataSource.insertReport(reportToSave);
-    await submitReport(reportToSave.localId);
+
+    if (reportToSave.status == ReportStatusEnum.queued) {
+      await submitReport(reportToSave.localId);
+    }
   }
 
   @override
@@ -100,6 +101,7 @@ class ReportRepositoryImpl implements ReportRepository {
   Future<void> syncAllReports() async {
     final reports = await _localDataSource.getAllReports();
     final pendingReports = reports.where((r) {
+      if (r.status == ReportStatusEnum.draft) return false;
       if (r.status == ReportStatusEnum.submitted) return false;
       if (r.status == ReportStatusEnum.sending) return false;
       if (r.lastError == 'validation_error') return false;

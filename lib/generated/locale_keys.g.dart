@@ -2,7 +2,7 @@
 
 // ignore_for_file: constant_identifier_names
 
-abstract class  LocaleKeys {
+abstract class LocaleKeys {
   static const spora = 'spora';
   static const required_field = 'required_field';
   static const confirm = 'confirm';
@@ -43,7 +43,8 @@ abstract class  LocaleKeys {
   static const reset_password_title = 'reset_password.title';
   static const reset_password_description = 'reset_password.description';
   static const reset_password_continue_btn = 'reset_password.continue_btn';
-  static const reset_password_return_to_sign_in = 'reset_password.return_to_sign_in';
+  static const reset_password_return_to_sign_in =
+      'reset_password.return_to_sign_in';
   static const reset_password = 'reset_password';
   static const mfa_title = 'mfa.title';
   static const mfa_description = 'mfa.description';
@@ -84,8 +85,10 @@ abstract class  LocaleKeys {
   static const settings_profile_title = 'settings.profile.title';
   static const settings_profile_subtitle = 'settings.profile.subtitle';
   static const settings_profile = 'settings.profile';
-  static const settings_security_password_title = 'settings.security_password.title';
-  static const settings_security_password_subtitle = 'settings.security_password.subtitle';
+  static const settings_security_password_title =
+      'settings.security_password.title';
+  static const settings_security_password_subtitle =
+      'settings.security_password.subtitle';
   static const settings_security_password = 'settings.security_password';
   static const settings_preferences = 'settings.preferences';
   static const settings_dark_mode_title = 'settings.dark_mode.title';
@@ -93,7 +96,8 @@ abstract class  LocaleKeys {
   static const settings_dark_mode = 'settings.dark_mode';
   static const settings_language = 'settings.language';
   static const settings_notifications_title = 'settings.notifications.title';
-  static const settings_notifications_subtitle = 'settings.notifications.subtitle';
+  static const settings_notifications_subtitle =
+      'settings.notifications.subtitle';
   static const settings_notifications = 'settings.notifications';
   static const settings_support_help = 'settings.support_help';
   static const settings_help_center_title = 'settings.help_center.title';
@@ -107,13 +111,19 @@ abstract class  LocaleKeys {
   static const logout_confirm_title = 'logout_confirm.title';
   static const logout_confirm_subtitle = 'logout_confirm.subtitle';
   static const logout_confirm = 'logout_confirm';
-  static const device_capabilities_section_title = 'device_capabilities.section_title';
-  static const device_capabilities_open_camera = 'device_capabilities.open_camera';
-  static const device_capabilities_select_gallery = 'device_capabilities.select_gallery';
-  static const device_capabilities_get_location = 'device_capabilities.get_location';
-  static const device_capabilities_open_external_map = 'device_capabilities.open_external_map';
+  static const device_capabilities_section_title =
+      'device_capabilities.section_title';
+  static const device_capabilities_open_camera =
+      'device_capabilities.open_camera';
+  static const device_capabilities_select_gallery =
+      'device_capabilities.select_gallery';
+  static const device_capabilities_get_location =
+      'device_capabilities.get_location';
+  static const device_capabilities_open_external_map =
+      'device_capabilities.open_external_map';
   static const device_capabilities_pick_file = 'device_capabilities.pick_file';
-  static const device_capabilities_record_audio = 'device_capabilities.record_audio';
+  static const device_capabilities_record_audio =
+      'device_capabilities.record_audio';
   static const device_capabilities_file_info = 'device_capabilities.file_info';
   static const device_capabilities_file_name = 'device_capabilities.file_name';
   static const device_capabilities_file_path = 'device_capabilities.file_path';
@@ -122,25 +132,42 @@ abstract class  LocaleKeys {
   static const device_capabilities_latitude = 'device_capabilities.latitude';
   static const device_capabilities_longitude = 'device_capabilities.longitude';
   static const device_capabilities_accuracy = 'device_capabilities.accuracy';
-  static const device_capabilities_retrieval_time = 'device_capabilities.retrieval_time';
-  static const device_capabilities_start_recording = 'device_capabilities.start_recording';
-  static const device_capabilities_stop_recording = 'device_capabilities.stop_recording';
-  static const device_capabilities_cancel_recording = 'device_capabilities.cancel_recording';
-  static const device_capabilities_recording_in_progress = 'device_capabilities.recording_in_progress';
-  static const device_capabilities_elapsed_time = 'device_capabilities.elapsed_time';
-  static const device_capabilities_play_audio = 'device_capabilities.play_audio';
-  static const device_capabilities_pause_audio = 'device_capabilities.pause_audio';
-  static const device_capabilities_permission_required = 'device_capabilities.permission_required';
-  static const device_capabilities_permission_denied_msg = 'device_capabilities.permission_denied_msg';
-  static const device_capabilities_permission_permanently_denied_msg = 'device_capabilities.permission_permanently_denied_msg';
-  static const device_capabilities_open_settings = 'device_capabilities.open_settings';
-  static const device_capabilities_location_disabled_msg = 'device_capabilities.location_disabled_msg';
-  static const device_capabilities_location_timeout_msg = 'device_capabilities.location_timeout_msg';
-  static const device_capabilities_no_location_yet_msg = 'device_capabilities.no_location_yet_msg';
-  static const device_capabilities_no_map_app_msg = 'device_capabilities.no_map_app_msg';
+  static const device_capabilities_retrieval_time =
+      'device_capabilities.retrieval_time';
+  static const device_capabilities_start_recording =
+      'device_capabilities.start_recording';
+  static const device_capabilities_stop_recording =
+      'device_capabilities.stop_recording';
+  static const device_capabilities_cancel_recording =
+      'device_capabilities.cancel_recording';
+  static const device_capabilities_recording_in_progress =
+      'device_capabilities.recording_in_progress';
+  static const device_capabilities_elapsed_time =
+      'device_capabilities.elapsed_time';
+  static const device_capabilities_play_audio =
+      'device_capabilities.play_audio';
+  static const device_capabilities_pause_audio =
+      'device_capabilities.pause_audio';
+  static const device_capabilities_permission_required =
+      'device_capabilities.permission_required';
+  static const device_capabilities_permission_denied_msg =
+      'device_capabilities.permission_denied_msg';
+  static const device_capabilities_permission_permanently_denied_msg =
+      'device_capabilities.permission_permanently_denied_msg';
+  static const device_capabilities_open_settings =
+      'device_capabilities.open_settings';
+  static const device_capabilities_location_disabled_msg =
+      'device_capabilities.location_disabled_msg';
+  static const device_capabilities_location_timeout_msg =
+      'device_capabilities.location_timeout_msg';
+  static const device_capabilities_no_location_yet_msg =
+      'device_capabilities.no_location_yet_msg';
+  static const device_capabilities_no_map_app_msg =
+      'device_capabilities.no_map_app_msg';
   static const device_capabilities_cancel = 'device_capabilities.cancel';
   static const device_capabilities_close = 'device_capabilities.close';
-  static const device_capabilities_error_occurred = 'device_capabilities.error_occurred';
+  static const device_capabilities_error_occurred =
+      'device_capabilities.error_occurred';
   static const device_capabilities = 'device_capabilities';
   static const create_report_title = 'create_report_title';
   static const report_saved_success = 'report_saved_success';
@@ -153,6 +180,7 @@ abstract class  LocaleKeys {
   static const btn_camera = 'btn_camera';
   static const btn_gallery = 'btn_gallery';
   static const btn_save = 'btn_save';
+  static const btn_save_as_draft = 'btn_save_draft';
   static const field_location = 'field_location';
   static const btn_get_location = 'btn_get_location';
   static const location_fetched = 'location_fetched';
@@ -197,5 +225,4 @@ abstract class  LocaleKeys {
   static const detail_no_image = 'detail_no_image';
   static const btn_edit = 'btn_edit';
   static const report_updated_success = 'report_updated_success';
-
 }

@@ -10,6 +10,8 @@ abstract interface class ReportRemoteDataSource {
   });
 }
 
+final sharedFakeRemoteDataSource = FakeReportRemoteDataSourceImpl();
+
 class FakeReportRemoteDataSourceImpl implements ReportRemoteDataSource {
   FakeServiceMode mode;
 

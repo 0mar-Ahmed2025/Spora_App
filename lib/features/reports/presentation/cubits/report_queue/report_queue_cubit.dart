@@ -23,6 +23,7 @@ class ReportQueueCubit extends Cubit<ReportQueueState> {
   }
 
   Future<void> retryReport(String localId) async {
+    emit(state.copyWith(isLoading: true));
     await _repository.submitReport(localId);
     await loadReports();
   }
@@ -34,6 +35,7 @@ class ReportQueueCubit extends Cubit<ReportQueueState> {
   }
 
   Future<void> deleteDraft(String localId) async {
+    emit(state.copyWith(isLoading: true));
     await _repository.deleteReport(localId);
     await loadReports();
   }

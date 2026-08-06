@@ -134,7 +134,7 @@ class DashboardSuccessStateWidget extends StatelessWidget {
             subtitle: LocaleKeys.create_report_title.tr(),
             onTap: () {
               final localDataSource = LocalReportDataSourceImpl();
-              final remoteDataSource = FakeReportRemoteDataSourceImpl();
+              final remoteDataSource = sharedFakeRemoteDataSource;
               final repository = ReportRepositoryImpl(
                 localDataSource: localDataSource,
                 remoteDataSource: remoteDataSource,
@@ -163,7 +163,7 @@ class DashboardSuccessStateWidget extends StatelessWidget {
             subtitle: LocaleKeys.report_queue_title.tr(),
             onTap: () {
               final localDataSource = LocalReportDataSourceImpl();
-              final remoteDataSource = FakeReportRemoteDataSourceImpl();
+              final remoteDataSource = sharedFakeRemoteDataSource;
               final repository = ReportRepositoryImpl(
                 localDataSource: localDataSource,
                 remoteDataSource: remoteDataSource,

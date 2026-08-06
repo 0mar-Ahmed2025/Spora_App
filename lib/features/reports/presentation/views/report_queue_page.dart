@@ -5,6 +5,7 @@ import 'package:spora_app/features/reports/data/datasources/fake_report_remote_d
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_cubit.dart';
 import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_state.dart';
+import 'package:spora_app/features/reports/presentation/views/create_report_page.dart';
 import 'package:spora_app/features/reports/presentation/views/report_details_page.dart';
 import 'package:spora_app/features/reports/presentation/views/edit_report_page.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
@@ -111,9 +112,8 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => ReportDetailsPage(
-                                      report: report,
-                                    ),
+                                    builder: (_) =>
+                                        ReportDetailsPage(report: report),
                                   ),
                                 );
                               },
@@ -161,8 +161,10 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                           cubit.retryReport(report.localId),
                                     ),
                                   if (report.status == ReportStatusEnum.draft ||
-                                      (report.status == ReportStatusEnum.failed &&
-                                          report.lastError == 'validation_error'))
+                                      (report.status ==
+                                              ReportStatusEnum.failed &&
+                                          report.lastError ==
+                                              'validation_error'))
                                     IconButton(
                                       icon: const Icon(
                                         Icons.edit,
@@ -172,9 +174,8 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                         await Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) => EditReportPage(
-                                              report: report,
-                                            ),
+                                            builder: (_) =>
+                                                EditReportPage(report: report),
                                           ),
                                         );
                                         cubit.loadReports();
@@ -199,6 +200,20 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
             ],
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepPurpleAccent,
+        foregroundColor: Colors.white,
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateReportPage()),
+          );
+          if (context.mounted) {
+            context.read<ReportQueueCubit>().loadReports();
+          }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

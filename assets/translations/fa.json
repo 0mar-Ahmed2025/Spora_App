@@ -172,6 +172,7 @@
   "btn_camera": "دوربین",
   "btn_gallery": "گالری",
   "btn_save": "ذخیره گزارش",
+  "btn_save_draft": "ذخیره به عنوان پیش‌نویس",
   "field_location": "موقعیت",
   "btn_get_location": "دریافت موقعیت",
   "location_fetched": "موقعیت دریافت شد",
