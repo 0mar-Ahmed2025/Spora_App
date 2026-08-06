@@ -80,6 +80,9 @@ class EditReportCubit extends Cubit<EditReportState> {
       );
 
       await _repository.updateReport(updatedReport);
+
+      await _repository.submitReport(updatedReport.localId);
+
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     } catch (e) {
       emit(state.copyWith(isSubmitting: false, errorMessage: 'storage_error'));

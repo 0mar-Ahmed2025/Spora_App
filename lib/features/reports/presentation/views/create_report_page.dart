@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:spora_app/core/helper/app_pop_up.dart';
 import 'package:spora_app/features/device_capabilities/services/location_service.dart';
 import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
 import 'package:spora_app/features/reports/data/datasources/local_report_data_source.dart';
@@ -37,8 +38,10 @@ class CreateReportPage extends StatelessWidget {
     final status = await Permission.location.request();
     if (!status.isGranted) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(LocaleKeys.device_capabilities_permission_denied_msg.tr())),
+        SnackBarPopUp().show(
+          context: context,
+          message: LocaleKeys.device_capabilities_permission_denied_msg.tr(),
+          state: PopUpState.warning,
         );
       }
       return;
@@ -52,14 +55,18 @@ class CreateReportPage extends StatelessWidget {
           locationData.latitude,
           locationData.longitude,
         );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(LocaleKeys.location_fetched.tr())),
+        SnackBarPopUp().show(
+          context: context,
+          message: LocaleKeys.location_fetched.tr(),
+          state: PopUpState.success,
         );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(LocaleKeys.device_capabilities_error_occurred.tr())),
+        SnackBarPopUp().show(
+          context: context,
+          message: LocaleKeys.device_capabilities_error_occurred.tr(),
+          state: PopUpState.error,
         );
       }
     }
@@ -73,21 +80,25 @@ class CreateReportPage extends StatelessWidget {
         create: (context) => CreateReportCubit(
           repository: ReportRepositoryImpl(
             localDataSource: LocalReportDataSourceImpl(),
-            remoteDataSource: FakeReportRemoteDataSourceImpl(),
+            remoteDataSource: sharedFakeRemoteDataSource,
           ),
         ),
         child: BlocConsumer<CreateReportCubit, CreateReportState>(
           listener: (context, state) {
-            if (state.isSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(LocaleKeys.report_saved_success.tr())),
+            if (state.isSuccess == true) {
+              SnackBarPopUp().show(
+                context: context,
+                message: LocaleKeys.report_saved_success.tr(),
+                state: PopUpState.success,
               );
               Navigator.pop(context);
             }
             if (state.errorMessage != null) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMessage!.tr())));
+              SnackBarPopUp().show(
+                context: context,
+                message: state.errorMessage ?? "",
+                state: PopUpState.error,
+              );
             }
           },
           builder: (context, state) {
@@ -121,35 +132,49 @@ class CreateReportPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: state.categoryId,
-                    hint: Text(LocaleKeys.field_category.tr()),
-                    items: categories.map((cat) {
-                      return DropdownMenuItem<String>(
-                        value: cat['id'],
-                        child: Text(cat['nameKey']!.tr()),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      if (val != null) cubit.categoryChanged(val);
-                    },
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          dropdownColor: Colors.deepPurple[200],
+                          borderRadius: BorderRadius.circular(20),
+                          value: state.categoryId,
+                          hint: Text(LocaleKeys.field_category.tr()),
+                          items: categories.map((cat) {
+                            return DropdownMenuItem<String>(
+                              value: cat['id'],
+                              child: Text(cat['nameKey']!.tr()),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) cubit.categoryChanged(val);
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: DropdownButtonFormField<ReportPriorityEnum>(
+                          dropdownColor: Colors.deepPurple[200],
+
+                          borderRadius: BorderRadius.circular(20),
+                          value: state.priority,
+                          decoration: InputDecoration(
+                            labelText: LocaleKeys.field_priority.tr(),
+                          ),
+                          items: ReportPriorityEnum.values.map((p) {
+                            return DropdownMenuItem<ReportPriorityEnum>(
+                              value: p,
+                              child: Text('priority_${p.name}'.tr()),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) cubit.priorityChanged(val);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<ReportPriorityEnum>(
-                    value: state.priority,
-                    decoration: InputDecoration(
-                      labelText: LocaleKeys.field_priority.tr(),
-                    ),
-                    items: ReportPriorityEnum.values.map((p) {
-                      return DropdownMenuItem<ReportPriorityEnum>(
-                        value: p,
-                        child: Text('priority_${p.name}'.tr()),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      if (val != null) cubit.priorityChanged(val);
-                    },
-                  ),
+
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -202,7 +227,8 @@ class CreateReportPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        if (state.latitude != null && state.longitude != null) ...[
+                        if (state.latitude != null &&
+                            state.longitude != null) ...[
                           Text(
                             'Lat: ${state.latitude!.toStringAsFixed(6)}, Lng: ${state.longitude!.toStringAsFixed(6)}',
                             style: TextStyle(color: Colors.grey.shade700),
@@ -213,8 +239,10 @@ class CreateReportPage extends StatelessWidget {
                             child: TextButton.icon(
                               onPressed: () {
                                 cubit.locationCleared();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(LocaleKeys.location_cleared.tr())),
+                                SnackBarPopUp().show(
+                                  context: context,
+                                  message: LocaleKeys.location_cleared.tr(),
+                                  state: PopUpState.success,
                                 );
                               },
                               icon: const Icon(Icons.clear, size: 16),
@@ -234,13 +262,52 @@ class CreateReportPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: state.isValid && !state.isSubmitting
-                        ? () => cubit.submitReport()
-                        : null,
-                    child: state.isSubmitting
-                        ? const CircularProgressIndicator()
-                        : Text(LocaleKeys.btn_save.tr()),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
+                          onPressed: state.isValid && !state.isSubmitting
+                              ? () => cubit.submitReport(saveAsDraft: false)
+                              : null,
+                          child: state.isSubmitting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(LocaleKeys.btn_save.tr()),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: Size(40, 50),
+                            backgroundColor: Colors.orangeAccent,
+                          ),
+                          onPressed: state.isSubmitting
+                              ? null
+                              : () => cubit.submitReport(saveAsDraft: true),
+
+                          child: state.isSubmitting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(LocaleKeys.btn_save_as_draft.tr()),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -172,6 +172,7 @@
   "btn_camera": "الكاميرا",
   "btn_gallery": "المعرض",
   "btn_save": "حفظ البلاغ",
+  "btn_save_draft": "حفظ كمسودة",
   "field_location": "الموقع",
   "btn_get_location": "جلب الموقع",
   "location_fetched": "تم جلب الموقع",
