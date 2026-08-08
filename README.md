@@ -9,7 +9,7 @@ Flutter mobile app for the Maya platform. It integrates with Maya Core APIs and 
 - **State management:** Bloc / Cubit
 - **Networking:** Dio
 - **Navigation:** GoRouter
-- **Storage:** flutter_secure_storage, shared_preferences
+- **Storage:** flutter_secure_storage, shared_preferences, sqflite
 - **Localization:** easy_localization
 - **UI:** flutter_screenutil
 
@@ -27,6 +27,7 @@ lib/
 │   ├── dashboard/
 │   ├── device_capabilities/
 │   ├── profile/
+│   ├── reports/
 │   ├── settings/
 │   └── splash/
 └── main.dart
@@ -177,6 +178,75 @@ All required manual tests have been performed and verified on a physical device:
 | Build verification | PASSED (`flutter build apk --debug`) |
 
 Screenshots and screen recording are included with the submission.
+
+## Report Queue
+
+A local-first reporting feature. Reports are saved to an on-device SQLite database before any server interaction, so a report is never lost even when the network is down.
+
+### Workflow
+
+1. The user fills the report form (title, description, category, priority, optional image and location) and taps **Save Report** or **Save as Draft**.
+2. The report is persisted locally first. A non-draft report is then submitted to the fake remote service.
+3. Submission outcome is stored back to the local database:
+   - `submitted`: server accepted the report and returned a `serverId`.
+   - `failed`: the request failed (offline, timeout, server error, validation error, or missing image file). The report stays in the queue with a retry count.
+   - `sending`: transient state while a submission is in flight.
+4. The queue screen lists all local reports, lets the user retry failed reports, edit validation-failed reports, delete drafts, and re-sync everything.
+
+### Why SQLite
+
+The feature must work offline-first and survive app restarts. A dedicated SQLite table (`reports`) in `lib/core/database/database_helper.dart` persists every report locally, which:
+
+- keeps reports across app restarts (restored on the next launch);
+- prevents data loss on network failure;
+- tracks retry counts and last errors per report.
+
+`shelf`/server memory or `shared_preferences` are not used because a structured, queryable, restart-safe store is required.
+
+### Fake Service Modes
+
+The "fake server" is implemented in `fake_report_remote_data_source.dart`. From the queue screen's dropdown you can switch the behaviour of the next submission:
+
+| Mode | Behaviour |
+|------|-----------|
+| `success` | Returns a synthetic `serverId` |
+| `offline` | Throws a network-unavailable failure |
+| `timeout` | Waits, then throws a timeout failure |
+| `serverError` | Throws a server error failure |
+| `validationError` | Throws a validation failure (only retryable after editing) |
+
+Validation failures are deliberately **not** auto-retried by the sync-all action; the user must edit the report first.
+
+### Architecture
+
+- UI: `report_queue_page.dart`, `create_report_page.dart`, `report_details_page.dart`, `edit_report_page.dart`
+- State: `report_queue`, `create_report`, `edit_report` cubits
+- Domain: `ReportRepositoryImpl` handles save-first, idempotent submission, retry, and duplicate-submission prevention
+- Data: `LocalReportDataSourceImpl` (SQLite) + `FakeReportRemoteDataSourceImpl` (fake server modes)
+- Localization: all report strings exist in English, Arabic, and Persian
+
+### Report Tests
+
+Run:
+
+```bash
+flutter test
+```
+
+The report tests live in `test/fakes/features/reports/` and cover:
+
+- Saving a valid report locally and keeping it queued when the server is unreachable
+- Restoring reports after repository reinitialization
+- Successful submission (server id stored, `submitted` status)
+- Network failure → `failed` status with retry count increment
+- Retry across repeated submissions
+- Duplicate simultaneous submissions are prevented
+- Missing image file is handled safely
+- Validation failures are not auto-retried by sync
+- Sync submits only eligible queued/retryable reports
+- Drafts are never auto-submitted
+- Queue screen renders reports and exposes a retry action for failed reports
+- Translation-key parity for every report feature key in English, Arabic, and Persian
 
 ## Known Limitations
 
