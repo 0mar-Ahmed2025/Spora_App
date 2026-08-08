@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spora_app/core/helper/app_pop_up.dart';
@@ -105,7 +106,7 @@ class CreateReportPage extends StatelessWidget {
             final cubit = context.read<CreateReportCubit>();
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: REdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -118,7 +119,7 @@ class CreateReportPage extends StatelessWidget {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   TextField(
                     onChanged: cubit.descriptionChanged,
                     maxLines: 4,
@@ -131,13 +132,13 @@ class CreateReportPage extends StatelessWidget {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Row(
                     children: [
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           dropdownColor: Colors.deepPurple[200],
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                           value: state.categoryId,
                           hint: Text(LocaleKeys.field_category.tr()),
                           items: categories.map((cat) {
@@ -151,12 +152,12 @@ class CreateReportPage extends StatelessWidget {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Expanded(
                         child: DropdownButtonFormField<ReportPriorityEnum>(
                           dropdownColor: Colors.deepPurple[200],
 
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                           value: state.priority,
                           decoration: InputDecoration(
                             labelText: LocaleKeys.field_priority.tr(),
@@ -175,65 +176,74 @@ class CreateReportPage extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Row(
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () =>
                               _pickImage(context, ImageSource.camera),
-                          icon: const Icon(Icons.camera_alt),
-                          label: Text(LocaleKeys.btn_camera.tr()),
+                          icon: Icon(Icons.camera_alt, size: 20.sp),
+                          label: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(LocaleKeys.btn_camera.tr()),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () =>
                               _pickImage(context, ImageSource.gallery),
-                          icon: const Icon(Icons.photo_library),
-                          label: Text(LocaleKeys.btn_gallery.tr()),
+                          icon: Icon(Icons.photo_library, size: 20.sp),
+                          label: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(LocaleKeys.btn_gallery.tr()),
+                          ),
                         ),
                       ),
                     ],
                   ),
                   if (state.imagePath != null) ...[
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                       child: Image.file(
                         File(state.imagePath!),
-                        height: 150,
+                        height: 150.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ],
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: REdgeInsets.all(12),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           LocaleKeys.field_location.tr(),
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         if (state.latitude != null &&
                             state.longitude != null) ...[
                           Text(
                             'Lat: ${state.latitude!.toStringAsFixed(6)}, Lng: ${state.longitude!.toStringAsFixed(6)}',
-                            style: TextStyle(color: Colors.grey.shade700),
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 14.sp,
+                            ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8.h),
                           Align(
                             alignment: AlignmentDirectional.centerEnd,
                             child: TextButton.icon(
@@ -245,7 +255,7 @@ class CreateReportPage extends StatelessWidget {
                                   state: PopUpState.success,
                                 );
                               },
-                              icon: const Icon(Icons.clear, size: 16),
+                              icon: Icon(Icons.clear, size: 16.sp),
                               label: Text(LocaleKeys.cancel.tr()),
                             ),
                           ),
@@ -254,14 +264,17 @@ class CreateReportPage extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               onPressed: () => _fetchLocation(context),
-                              icon: const Icon(Icons.my_location),
-                              label: Text(LocaleKeys.btn_get_location.tr()),
+                              icon: Icon(Icons.my_location, size: 20.sp),
+                              label: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(LocaleKeys.btn_get_location.tr()),
+                              ),
                             ),
                           ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   Row(
                     children: [
                       Expanded(
@@ -273,10 +286,10 @@ class CreateReportPage extends StatelessWidget {
                               ? () => cubit.submitReport(saveAsDraft: false)
                               : null,
                           child: state.isSubmitting
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
+                              ? SizedBox(
+                                  height: 20.r,
+                                  width: 20.r,
+                                  child: const CircularProgressIndicator(
                                     strokeWidth: 2,
                                     color: Colors.white,
                                   ),
@@ -284,11 +297,11 @@ class CreateReportPage extends StatelessWidget {
                               : Text(LocaleKeys.btn_save.tr()),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            fixedSize: Size(40, 50),
+                            fixedSize: Size(40.w, 50.h),
                             backgroundColor: Colors.orangeAccent,
                           ),
                           onPressed: state.isSubmitting
@@ -296,15 +309,20 @@ class CreateReportPage extends StatelessWidget {
                               : () => cubit.submitReport(saveAsDraft: true),
 
                           child: state.isSubmitting
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
+                              ? SizedBox(
+                                  height: 20.r,
+                                  width: 20.r,
+                                  child: const CircularProgressIndicator(
                                     strokeWidth: 2,
                                     color: Colors.white,
                                   ),
                                 )
-                              : Text(LocaleKeys.btn_save_as_draft.tr()),
+                              : FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    LocaleKeys.btn_save_as_draft.tr(),
+                                  ),
+                                ),
                         ),
                       ),
                     ],

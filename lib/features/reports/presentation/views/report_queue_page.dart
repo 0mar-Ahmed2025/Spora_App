@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_cubit.dart';
@@ -43,15 +44,15 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
           return Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
-                ),
+                ).r,
                 color: Colors.grey.shade200,
                 child: Row(
                   children: [
                     Text(LocaleKeys.fake_mode_label.tr()),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Expanded(
                       child: DropdownButton<FakeServiceMode>(
                         value: state.fakeServiceMode,
@@ -72,7 +73,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4).r,
                 child: Row(
                   children: [
                     FilterChip(
@@ -82,7 +83,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                     ),
                     ...ReportStatusEnum.values.map((status) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
                         child: FilterChip(
                           label: Text('status_${status.name}'.tr()),
                           selected: state.filterStatus == status,
@@ -103,10 +104,10 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                         itemBuilder: (context, index) {
                           final report = state.filteredReports[index];
                           return Card(
-                            margin: const EdgeInsets.symmetric(
+                            margin: EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 6,
-                            ),
+                            ).r,
                             child: ListTile(
                               onTap: () {
                                 Navigator.push(
@@ -119,8 +120,9 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                               },
                               title: Text(
                                 report.title,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 15.sp,
                                 ),
                               ),
                               subtitle: Column(
@@ -137,7 +139,10 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                   if (report.lastError != null)
                                     Text(
                                       '${LocaleKeys.error_label.tr()}: ${report.lastError!.tr()}',
-                                      style: const TextStyle(color: Colors.red),
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 13.sp,
+                                      ),
                                     ),
                                   Text(
                                     '${LocaleKeys.retries_label.tr()}: ${report.retryCount}',
@@ -148,14 +153,19 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   if (report.imagePath != null)
-                                    const Icon(Icons.image, color: Colors.blue),
+                                    Icon(
+                                      Icons.image,
+                                      color: Colors.blue,
+                                      size: 22.sp,
+                                    ),
                                   if (report.status ==
                                           ReportStatusEnum.failed ||
                                       report.status == ReportStatusEnum.queued)
                                     IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.refresh,
                                         color: Colors.orange,
+                                        size: 22.sp,
                                       ),
                                       onPressed: () =>
                                           cubit.retryReport(report.localId),
@@ -166,9 +176,10 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                           report.lastError ==
                                               'validation_error'))
                                     IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.edit,
                                         color: Colors.blue,
+                                        size: 22.sp,
                                       ),
                                       onPressed: () async {
                                         await Navigator.push(
@@ -183,9 +194,10 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                     ),
                                   if (report.status == ReportStatusEnum.draft)
                                     IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.delete,
                                         color: Colors.red,
+                                        size: 22.sp,
                                       ),
                                       onPressed: () =>
                                           cubit.deleteDraft(report.localId),
@@ -213,7 +225,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
             context.read<ReportQueueCubit>().loadReports();
           }
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, size: 24.sp),
       ),
     );
   }
