@@ -35,63 +35,63 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<void> submitReport(String localId) async {
-    if (_processingIds.contains(localId)) {
+    if (!_processingIds.add(localId)) {
       return;
     }
 
-    final report = await _localDataSource.getReportById(localId);
-    if (report == null) return;
+    try {
+      final report = await _localDataSource.getReportById(localId);
+      if (report == null) return;
 
-    if (report.imagePath != null) {
-      final exists = await FileHelper.isFileAvailable(report.imagePath);
-      if (!exists) {
-        final updatedReport = report.copyWith(
+      if (report.imagePath != null) {
+        final exists = await FileHelper.isFileAvailable(report.imagePath);
+        if (!exists) {
+          final updatedReport = report.copyWith(
+            status: ReportStatusEnum.failed,
+            lastError: 'file_missing',
+            updatedAt: DateTime.now(),
+          );
+          await _localDataSource.updateReport(updatedReport);
+          return;
+        }
+      }
+
+      final sendingReport = report.copyWith(
+        status: ReportStatusEnum.sending,
+        updatedAt: DateTime.now(),
+      );
+      await _localDataSource.updateReport(sendingReport);
+
+      try {
+        final serverId = await _remoteDataSource.submitReport(
+          sendingReport,
+          idempotencyKey: sendingReport.localId,
+        );
+
+        final submittedReport = sendingReport.copyWith(
+          serverId: serverId,
+          status: ReportStatusEnum.submitted,
+          lastError: null,
+          updatedAt: DateTime.now(),
+        );
+        await _localDataSource.updateReport(submittedReport);
+      } on Failure catch (e) {
+        final updatedReport = sendingReport.copyWith(
           status: ReportStatusEnum.failed,
-          lastError: 'file_missing',
+          retryCount: sendingReport.retryCount + 1,
+          lastError: e.code,
           updatedAt: DateTime.now(),
         );
         await _localDataSource.updateReport(updatedReport);
-        return;
+      } catch (e) {
+        final updatedReport = sendingReport.copyWith(
+          status: ReportStatusEnum.failed,
+          retryCount: sendingReport.retryCount + 1,
+          lastError: 'unknown_error',
+          updatedAt: DateTime.now(),
+        );
+        await _localDataSource.updateReport(updatedReport);
       }
-    }
-
-    _processingIds.add(localId);
-
-    final sendingReport = report.copyWith(
-      status: ReportStatusEnum.sending,
-      updatedAt: DateTime.now(),
-    );
-    await _localDataSource.updateReport(sendingReport);
-
-    try {
-      final serverId = await _remoteDataSource.submitReport(
-        sendingReport,
-        idempotencyKey: sendingReport.localId,
-      );
-
-      final submittedReport = sendingReport.copyWith(
-        serverId: serverId,
-        status: ReportStatusEnum.submitted,
-        lastError: null,
-        updatedAt: DateTime.now(),
-      );
-      await _localDataSource.updateReport(submittedReport);
-    } on Failure catch (e) {
-      final updatedReport = sendingReport.copyWith(
-        status: ReportStatusEnum.failed,
-        retryCount: sendingReport.retryCount + 1,
-        lastError: e.code,
-        updatedAt: DateTime.now(),
-      );
-      await _localDataSource.updateReport(updatedReport);
-    } catch (e) {
-      final updatedReport = sendingReport.copyWith(
-        status: ReportStatusEnum.failed,
-        retryCount: sendingReport.retryCount + 1,
-        lastError: 'unknown_error',
-        updatedAt: DateTime.now(),
-      );
-      await _localDataSource.updateReport(updatedReport);
     } finally {
       _processingIds.remove(localId);
     }
