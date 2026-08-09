@@ -11,6 +11,7 @@ class ReportRepositoryImpl implements ReportRepository {
   final LocalReportDataSource _localDataSource; // Local database
   final ReportRemoteDataSource _remoteDataSource; // Server-side
   final Set<String> _processingIds = {};
+  static const Duration _sendingTimeout = Duration(minutes: 5);
 
   ReportRepositoryImpl({
     required LocalReportDataSource localDataSource,
@@ -103,12 +104,16 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<void> syncAllReports() async {
-    final reports = await _localDataSource.getAllReports();
-    final pendingReports = reports.where((r) {
+    await _recoverStaleSendingReports();
+
+    final updatedReports = await _localDataSource.getAllReports();
+
+    final pendingReports = updatedReports.where((r) {
       if (r.status == ReportStatusEnum.draft) return false;
       if (r.status == ReportStatusEnum.submitted) return false;
       if (r.status == ReportStatusEnum.sending) return false;
       if (r.lastError == 'validation_error') return false;
+
       return true;
     }).toList();
 
@@ -145,6 +150,29 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<List<LocalReportModel>> getAllReports() async {
+    await _recoverStaleSendingReports();
     return await _localDataSource.getAllReports();
+  }
+
+  Future<void> _recoverStaleSendingReports() async {
+    final reports = await _localDataSource.getAllReports();
+
+    final now = DateTime.now();
+
+    for (final report in reports) {
+      if (report.status != ReportStatusEnum.sending) continue;
+
+      final sendingDuration = now.difference(report.updatedAt);
+
+      if (sendingDuration < _sendingTimeout) continue;
+
+      final recoveredReport = report.copyWith(
+        status: ReportStatusEnum.queued,
+        lastError: null,
+        updatedAt: now,
+      );
+
+      await _localDataSource.updateReport(recoveredReport);
+    }
   }
 }
