@@ -97,7 +97,7 @@ class CreateReportPage extends StatelessWidget {
             if (state.errorMessage != null) {
               SnackBarPopUp().show(
                 context: context,
-                message: state.errorMessage ?? "",
+                message: LocaleKeys.storage_error.tr(),
                 state: PopUpState.error,
               );
             }
