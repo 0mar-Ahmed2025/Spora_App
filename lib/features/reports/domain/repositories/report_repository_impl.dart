@@ -119,13 +119,28 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<void> updateReport(LocalReportModel report) async {
+    final oldReport = await _localDataSource.getReportById(report.localId);
+
     final updatedReport = report.copyWith(updatedAt: DateTime.now());
+
     await _localDataSource.updateReport(updatedReport);
+
+    if (oldReport != null &&
+        oldReport.imagePath != null &&
+        oldReport.imagePath != updatedReport.imagePath) {
+      await FileHelper.deleteFile(oldReport.imagePath);
+    }
   }
 
   @override
   Future<void> deleteReport(String localId) async {
+    final report = await _localDataSource.getReportById(localId);
+
+    if (report == null) return;
+
     await _localDataSource.deleteReport(localId);
+
+    await FileHelper.deleteFile(report.imagePath);
   }
 
   @override
