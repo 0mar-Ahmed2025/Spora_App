@@ -44,10 +44,7 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
           return Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ).r,
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8).r,
                 color: Colors.grey.shade200,
                 child: Row(
                   children: [
@@ -159,8 +156,11 @@ class _ReportQueuePageState extends State<ReportQueuePage> {
                                       size: 22.sp,
                                     ),
                                   if (report.status ==
-                                          ReportStatusEnum.failed ||
-                                      report.status == ReportStatusEnum.queued)
+                                          ReportStatusEnum.queued ||
+                                      (report.status ==
+                                              ReportStatusEnum.failed &&
+                                          report.lastError !=
+                                              'validation_error'))
                                     IconButton(
                                       icon: Icon(
                                         Icons.refresh,

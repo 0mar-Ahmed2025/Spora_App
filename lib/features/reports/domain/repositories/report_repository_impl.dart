@@ -42,6 +42,10 @@ class ReportRepositoryImpl implements ReportRepository {
     try {
       final report = await _localDataSource.getReportById(localId);
       if (report == null) return;
+      if (report.status == ReportStatusEnum.failed &&
+          report.lastError == 'validation_error') {
+        return;
+      }
 
       if (report.imagePath != null) {
         final exists = await FileHelper.isFileAvailable(report.imagePath);
