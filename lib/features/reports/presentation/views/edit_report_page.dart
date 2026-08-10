@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:spora_app/features/device_capabilities/services/location_service.dart';
 import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
 import 'package:spora_app/features/reports/data/datasources/local_report_data_source.dart';
 import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
+import 'package:spora_app/features/reports/domain/models/report_categories.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository_impl.dart';
 import 'package:spora_app/features/reports/presentation/cubits/edit_report/edit_report_cubit.dart';
@@ -21,13 +22,6 @@ class EditReportPage extends StatefulWidget {
   const EditReportPage({super.key, required this.report});
 
   final LocalReportModel report;
-
-  static const List<Map<String, String>> categories = [
-    {'id': 'technical', 'nameKey': 'category_technical'},
-    {'id': 'service', 'nameKey': 'category_service'},
-    {'id': 'feedback', 'nameKey': 'category_feedback'},
-    {'id': 'other', 'nameKey': 'category_other'},
-  ];
 
   @override
   State<EditReportPage> createState() => _EditReportPageState();
@@ -128,7 +122,7 @@ class _EditReportPageState extends State<EditReportPage> {
             final cubit = context.read<EditReportCubit>();
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: REdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -142,7 +136,7 @@ class _EditReportPageState extends State<EditReportPage> {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   TextField(
                     controller: _descriptionController,
                     onChanged: cubit.descriptionChanged,
@@ -156,11 +150,11 @@ class _EditReportPageState extends State<EditReportPage> {
                           : null,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   DropdownButtonFormField<String>(
                     value: state.categoryId,
                     hint: Text(LocaleKeys.field_category.tr()),
-                    items: EditReportPage.categories.map((cat) {
+                    items: ReportCategories.categories.map((cat) {
                       return DropdownMenuItem<String>(
                         value: cat['id'],
                         child: Text(cat['nameKey']!.tr()),
@@ -170,7 +164,7 @@ class _EditReportPageState extends State<EditReportPage> {
                       if (val != null) cubit.categoryChanged(val);
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   DropdownButtonFormField<ReportPriorityEnum>(
                     value: state.priority,
                     decoration: InputDecoration(
@@ -186,49 +180,59 @@ class _EditReportPageState extends State<EditReportPage> {
                       if (val != null) cubit.priorityChanged(val);
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Row(
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () =>
                               _pickImage(context, ImageSource.camera),
-                          icon: const Icon(Icons.camera_alt),
-                          label: Text(LocaleKeys.btn_camera.tr()),
+                          icon: Icon(Icons.camera_alt, size: 20.sp),
+                          label: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(LocaleKeys.btn_camera.tr()),
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () =>
                               _pickImage(context, ImageSource.gallery),
-                          icon: const Icon(Icons.photo_library),
-                          label: Text(LocaleKeys.btn_gallery.tr()),
+                          icon: Icon(Icons.photo_library, size: 20.sp),
+                          label: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(LocaleKeys.btn_gallery.tr()),
+                          ),
                         ),
                       ),
                     ],
                   ),
                   if (state.imagePath != null) ...[
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(8.r),
                       child: Image.file(
                         File(state.imagePath!),
-                        height: 150,
+                        height: 150.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ],
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   _buildLocationTile(context, state, cubit),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24.h),
                   ElevatedButton(
                     onPressed: state.isValid && !state.isSubmitting
                         ? () => cubit.updateReport()
                         : null,
                     child: state.isSubmitting
-                        ? const CircularProgressIndicator()
+                        ? SizedBox(
+                            height: 22.r,
+                            width: 22.r,
+                            child: const CircularProgressIndicator(),
+                          )
                         : Text(LocaleKeys.btn_save.tr()),
                   ),
                 ],
@@ -246,25 +250,25 @@ class _EditReportPageState extends State<EditReportPage> {
     EditReportCubit cubit,
   ) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: REdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             LocaleKeys.field_location.tr(),
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           if (state.latitude != null && state.longitude != null) ...[
             Text(
               'Lat: ${state.latitude!.toStringAsFixed(6)}, Lng: ${state.longitude!.toStringAsFixed(6)}',
-              style: TextStyle(color: Colors.grey.shade700),
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 14.sp),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Align(
               alignment: AlignmentDirectional.centerEnd,
               child: TextButton.icon(
@@ -274,7 +278,7 @@ class _EditReportPageState extends State<EditReportPage> {
                     SnackBar(content: Text(LocaleKeys.location_cleared.tr())),
                   );
                 },
-                icon: const Icon(Icons.clear, size: 16),
+                icon: Icon(Icons.clear, size: 16.sp),
                 label: Text(LocaleKeys.cancel.tr()),
               ),
             ),
@@ -283,8 +287,11 @@ class _EditReportPageState extends State<EditReportPage> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () => _fetchLocation(context),
-                icon: const Icon(Icons.my_location),
-                label: Text(LocaleKeys.btn_get_location.tr()),
+                icon: Icon(Icons.my_location, size: 20.sp),
+                label: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(LocaleKeys.btn_get_location.tr()),
+                ),
               ),
             ),
         ],

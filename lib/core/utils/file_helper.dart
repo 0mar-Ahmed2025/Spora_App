@@ -16,6 +16,16 @@ class FileHelper {
     return savedImage.path;
   }
 
+  static Future<void> deleteFile(String? filePath) async {
+    if (filePath == null || filePath.isEmpty) return;
+
+    final file = File(filePath);
+
+    if (await file.exists()) {
+      await file.delete();
+    }
+  }
+
   static Future<bool> isFileAvailable(String? filePath) async {
     if (filePath == null || filePath.isEmpty) return false;
     return await File(filePath).exists();

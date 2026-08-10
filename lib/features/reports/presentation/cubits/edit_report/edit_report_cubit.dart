@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spora_app/core/errors/failures.dart';
+import 'package:spora_app/core/utils/file_helper.dart';
 import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository.dart';
@@ -61,17 +63,28 @@ class EditReportCubit extends Cubit<EditReportState> {
     emit(state.copyWith(isSubmitting: true, errorMessage: null));
 
     try {
-      final existingReport = await _repository.getAllReports();
-      final report = existingReport.firstWhere(
+      final existingReports = await _repository.getAllReports();
+
+      final report = existingReports.firstWhere(
         (r) => r.localId == state.localId,
       );
+
+      String? imagePath = state.imagePath;
+
+      if (state.imagePath != report.imagePath) {
+        imagePath = await FileHelper.saveImagePermanently(state.imagePath);
+
+        if (state.imagePath != null && imagePath == null) {
+          throw const StorageFailure();
+        }
+      }
 
       final updatedReport = report.copyWith(
         title: state.title.trim(),
         description: state.description.trim(),
         categoryId: state.categoryId!,
         priority: state.priority,
-        imagePath: state.imagePath,
+        imagePath: imagePath,
         latitude: state.latitude,
         longitude: state.longitude,
         status: ReportStatusEnum.queued,

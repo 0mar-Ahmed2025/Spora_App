@@ -11,6 +11,7 @@ class ReportRepositoryImpl implements ReportRepository {
   final LocalReportDataSource _localDataSource; // Local database
   final ReportRemoteDataSource _remoteDataSource; // Server-side
   final Set<String> _processingIds = {};
+  static const Duration _sendingTimeout = Duration(minutes: 5);
 
   ReportRepositoryImpl({
     required LocalReportDataSource localDataSource,
@@ -43,14 +44,21 @@ class ReportRepositoryImpl implements ReportRepository {
       final report = await _localDataSource.getReportById(localId);
       if (report == null) return;
 
+      if (report.status == ReportStatusEnum.failed &&
+          report.lastError == 'validation_error') {
+        return;
+      }
+
       if (report.imagePath != null) {
         final exists = await FileHelper.isFileAvailable(report.imagePath);
+
         if (!exists) {
           final updatedReport = report.copyWith(
             status: ReportStatusEnum.failed,
             lastError: 'file_missing',
             updatedAt: DateTime.now(),
           );
+
           await _localDataSource.updateReport(updatedReport);
           return;
         }
@@ -60,13 +68,13 @@ class ReportRepositoryImpl implements ReportRepository {
         status: ReportStatusEnum.sending,
         updatedAt: DateTime.now(),
       );
+
       await _localDataSource.updateReport(sendingReport);
 
       try {
-        final serverId = await _remoteDataSource.submitReport(
-          sendingReport,
-          idempotencyKey: sendingReport.localId,
-        );
+        final serverId = await _remoteDataSource
+            .submitReport(sendingReport, idempotencyKey: sendingReport.localId)
+            .timeout(const Duration(seconds: 3));
 
         final submittedReport = sendingReport.copyWith(
           serverId: serverId,
@@ -74,7 +82,17 @@ class ReportRepositoryImpl implements ReportRepository {
           lastError: null,
           updatedAt: DateTime.now(),
         );
+
         await _localDataSource.updateReport(submittedReport);
+      } on TimeoutException {
+        final updatedReport = sendingReport.copyWith(
+          status: ReportStatusEnum.failed,
+          retryCount: sendingReport.retryCount + 1,
+          lastError: 'timeout',
+          updatedAt: DateTime.now(),
+        );
+
+        await _localDataSource.updateReport(updatedReport);
       } on Failure catch (e) {
         final updatedReport = sendingReport.copyWith(
           status: ReportStatusEnum.failed,
@@ -82,6 +100,7 @@ class ReportRepositoryImpl implements ReportRepository {
           lastError: e.code,
           updatedAt: DateTime.now(),
         );
+
         await _localDataSource.updateReport(updatedReport);
       } catch (e) {
         final updatedReport = sendingReport.copyWith(
@@ -90,6 +109,7 @@ class ReportRepositoryImpl implements ReportRepository {
           lastError: 'unknown_error',
           updatedAt: DateTime.now(),
         );
+
         await _localDataSource.updateReport(updatedReport);
       }
     } finally {
@@ -99,12 +119,16 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<void> syncAllReports() async {
-    final reports = await _localDataSource.getAllReports();
-    final pendingReports = reports.where((r) {
+    await _recoverStaleSendingReports();
+
+    final updatedReports = await _localDataSource.getAllReports();
+
+    final pendingReports = updatedReports.where((r) {
       if (r.status == ReportStatusEnum.draft) return false;
       if (r.status == ReportStatusEnum.submitted) return false;
       if (r.status == ReportStatusEnum.sending) return false;
       if (r.lastError == 'validation_error') return false;
+
       return true;
     }).toList();
 
@@ -115,17 +139,55 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<void> updateReport(LocalReportModel report) async {
+    final oldReport = await _localDataSource.getReportById(report.localId);
+
     final updatedReport = report.copyWith(updatedAt: DateTime.now());
+
     await _localDataSource.updateReport(updatedReport);
+
+    if (oldReport != null &&
+        oldReport.imagePath != null &&
+        oldReport.imagePath != updatedReport.imagePath) {
+      await FileHelper.deleteFile(oldReport.imagePath);
+    }
   }
 
   @override
   Future<void> deleteReport(String localId) async {
+    final report = await _localDataSource.getReportById(localId);
+
+    if (report == null) return;
+
     await _localDataSource.deleteReport(localId);
+
+    await FileHelper.deleteFile(report.imagePath);
   }
 
   @override
   Future<List<LocalReportModel>> getAllReports() async {
+    await _recoverStaleSendingReports();
     return await _localDataSource.getAllReports();
+  }
+
+  Future<void> _recoverStaleSendingReports() async {
+    final reports = await _localDataSource.getAllReports();
+
+    final now = DateTime.now();
+
+    for (final report in reports) {
+      if (report.status != ReportStatusEnum.sending) continue;
+
+      final sendingDuration = now.difference(report.updatedAt);
+
+      if (sendingDuration < _sendingTimeout) continue;
+
+      final recoveredReport = report.copyWith(
+        status: ReportStatusEnum.queued,
+        lastError: null,
+        updatedAt: now,
+      );
+
+      await _localDataSource.updateReport(recoveredReport);
+    }
   }
 }

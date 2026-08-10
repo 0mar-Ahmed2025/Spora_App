@@ -1,5 +1,7 @@
 import 'report_enums.dart';
 
+const _undefined = Object();
+
 class LocalReportModel {
   final String localId;
   final String? serverId;
@@ -40,12 +42,12 @@ class LocalReportModel {
     String? description,
     String? categoryId,
     ReportPriorityEnum? priority,
-    String? imagePath,
-    double? latitude,
-    double? longitude,
+    Object? imagePath = _undefined,
+    Object? latitude = _undefined,
+    Object? longitude = _undefined,
     ReportStatusEnum? status,
     int? retryCount,
-    String? lastError,
+    Object? lastError = _undefined,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -56,12 +58,24 @@ class LocalReportModel {
       description: description ?? this.description,
       categoryId: categoryId ?? this.categoryId,
       priority: priority ?? this.priority,
-      imagePath: imagePath ?? this.imagePath,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
+
+      imagePath: imagePath == _undefined
+          ? this.imagePath
+          : imagePath as String?,
+
+      latitude: latitude == _undefined ? this.latitude : latitude as double?,
+
+      longitude: longitude == _undefined
+          ? this.longitude
+          : longitude as double?,
+
       status: status ?? this.status,
       retryCount: retryCount ?? this.retryCount,
-      lastError: lastError ?? this.lastError,
+
+      lastError: lastError == _undefined
+          ? this.lastError
+          : lastError as String?,
+
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

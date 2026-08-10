@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/generated/locale_keys.g.dart';
@@ -15,15 +16,15 @@ class ReportDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(LocaleKeys.report_details.tr())),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: REdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const Divider(height: 32),
+            Divider(height: 32.h),
             _buildDetailSection(),
             if (report.lastError != null) ...[
-              const Divider(height: 32),
+              Divider(height: 32.h),
               _buildErrorSection(),
             ],
           ],
@@ -41,8 +42,8 @@ class ReportDetailsPage extends StatelessWidget {
             Expanded(
               child: Text(
                 report.title,
-                style: const TextStyle(
-                  fontSize: 20,
+                style: TextStyle(
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -50,14 +51,14 @@ class ReportDetailsPage extends StatelessWidget {
             _buildStatusChip(),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Row(
           children: [
             _buildInfoChip(
               'category_${report.categoryId}'.tr(),
               Icons.category,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8.w),
             _buildInfoChip(
               'priority_${report.priority.name}'.tr(),
               Icons.flag,
@@ -91,7 +92,7 @@ class ReportDetailsPage extends StatelessWidget {
     return Chip(
       label: Text(
         'status_${report.status.name}'.tr(),
-        style: const TextStyle(color: Colors.white, fontSize: 12),
+        style: TextStyle(color: Colors.white, fontSize: 12.sp),
       ),
       backgroundColor: color,
       padding: EdgeInsets.zero,
@@ -101,8 +102,8 @@ class ReportDetailsPage extends StatelessWidget {
 
   Widget _buildInfoChip(String label, IconData icon) {
     return Chip(
-      avatar: Icon(icon, size: 16),
-      label: Text(label, style: const TextStyle(fontSize: 12)),
+      avatar: Icon(icon, size: 16.sp),
+      label: Text(label, style: TextStyle(fontSize: 12.sp)),
       padding: EdgeInsets.zero,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
@@ -114,17 +115,21 @@ class ReportDetailsPage extends StatelessWidget {
       children: [
         Text(
           LocaleKeys.field_description.tr(),
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: 16.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Text(
           report.description,
-          style: TextStyle(color: Colors.grey.shade700, height: 1.5),
+          style: TextStyle(
+            color: Colors.grey.shade700,
+            fontSize: 14.sp,
+            height: 1.5,
+          ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         _buildDetailRow(
           LocaleKeys.detail_created_at.tr(),
           DateFormat('yyyy-MM-dd HH:mm').format(report.createdAt),
@@ -153,38 +158,42 @@ class ReportDetailsPage extends StatelessWidget {
             LocaleKeys.detail_no_location.tr(),
           ),
         if (report.imagePath != null) ...[
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
             child: Image.file(
               File(report.imagePath!),
-              height: 200,
+              height: 200.h,
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Container(
-                height: 100,
+                height: 100.h,
                 color: Colors.grey.shade200,
-                child: const Center(child: Icon(Icons.broken_image, size: 50)),
+                child: Center(child: Icon(Icons.broken_image, size: 50.sp)),
               ),
             ),
           ),
         ] else ...[
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Container(
-            height: 100,
+            height: 100.h,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
-                const SizedBox(height: 4),
+                Icon(
+                  Icons.image_not_supported,
+                  size: 40.sp,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 4.h),
                 Text(
                   LocaleKeys.detail_no_image.tr(),
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                 ),
               ],
             ),
@@ -200,30 +209,30 @@ class ReportDetailsPage extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.error_outline, color: Colors.red, size: 20),
-            const SizedBox(width: 8),
+            Icon(Icons.error_outline, color: Colors.red, size: 20.sp),
+            SizedBox(width: 8.w),
             Text(
               LocaleKeys.error_label.tr(),
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
                 color: Colors.red,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(12),
+          padding: REdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.red.shade50,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(8.r),
             border: Border.all(color: Colors.red.shade200),
           ),
           child: Text(
             report.lastError!.tr(),
-            style: TextStyle(color: Colors.red.shade700),
+            style: TextStyle(color: Colors.red.shade700, fontSize: 14.sp),
           ),
         ),
       ],
@@ -232,19 +241,19 @@ class ReportDetailsPage extends StatelessWidget {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 120,
+            width: 120.w,
             child: Text(
               '$label:',
-              style: const TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
             ),
           ),
           Expanded(
-            child: Text(value),
+            child: Text(value, style: TextStyle(fontSize: 14.sp)),
           ),
         ],
       ),
