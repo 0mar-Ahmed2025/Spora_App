@@ -1,13 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
 import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository.dart';
 import 'package:spora_app/features/reports/presentation/cubits/report_queue/report_queue_cubit.dart';
 import 'package:spora_app/features/reports/presentation/views/report_queue_page.dart';
+import 'package:spora_app/generated/codegen_loader.g.dart';
 
 class MockReportRepository extends Mock implements ReportRepository {}
 
@@ -31,8 +35,15 @@ LocalReportModel buildReport({
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MockReportRepository repository;
   late ReportQueueCubit cubit;
+
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+    await EasyLocalization.ensureInitialized();
+  });
 
   setUp(() {
     repository = MockReportRepository();
@@ -54,10 +65,29 @@ void main() {
     when(() => repository.submitReport(any())).thenAnswer((_) async {});
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: BlocProvider<ReportQueueCubit>.value(
-          value: cubit,
-          child: const ReportQueuePage(),
+      EasyLocalization(
+        supportedLocales: const [Locale('en')],
+        path: 'assets/translations',
+        fallbackLocale: const Locale('en'),
+        assetLoader: const CodegenLoader(),
+        child: Builder(
+          builder: (context) {
+            return ScreenUtilInit(
+              designSize: const Size(375, 812),
+              minTextAdapt: true,
+              builder: (context, child) {
+                return MaterialApp(
+                  locale: context.locale,
+                  supportedLocales: context.supportedLocales,
+                  localizationsDelegates: context.localizationDelegates,
+                  home: BlocProvider<ReportQueueCubit>.value(
+                    value: cubit,
+                    child: const ReportQueuePage(),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -118,5 +148,22 @@ void main() {
     await pumpQueueScreen(tester, reports: reports);
 
     expect(find.byIcon(Icons.refresh), findsNothing);
+  });
+
+  testWidgets('validation failed report exposes edit but not retry',
+      (tester) async {
+    final reports = [
+      buildReport(
+        localId: 'validation-1',
+        title: 'Validation failed report',
+        status: ReportStatusEnum.failed,
+        lastError: 'validation_error',
+      ),
+    ];
+
+    await pumpQueueScreen(tester, reports: reports);
+
+    expect(find.byIcon(Icons.refresh), findsNothing);
+    expect(find.byIcon(Icons.edit), findsOneWidget);
   });
 }
