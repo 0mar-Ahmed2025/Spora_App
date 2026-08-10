@@ -31,8 +31,8 @@ class FakeReportRemoteDataSourceImpl implements ReportRemoteDataSource {
         throw const NetworkFailure();
 
       case FakeServiceMode.timeout:
-        await Future.delayed(const Duration(seconds: 3));
-        throw const TimeoutFailure();
+        await Future.delayed(const Duration(seconds: 10));
+         return 'SERVER_${DateTime.now().millisecondsSinceEpoch}';
 
       case FakeServiceMode.serverError:
         await Future.delayed(const Duration(milliseconds: 500));

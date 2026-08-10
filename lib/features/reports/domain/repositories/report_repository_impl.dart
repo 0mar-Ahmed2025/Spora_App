@@ -43,6 +43,7 @@ class ReportRepositoryImpl implements ReportRepository {
     try {
       final report = await _localDataSource.getReportById(localId);
       if (report == null) return;
+
       if (report.status == ReportStatusEnum.failed &&
           report.lastError == 'validation_error') {
         return;
@@ -50,12 +51,14 @@ class ReportRepositoryImpl implements ReportRepository {
 
       if (report.imagePath != null) {
         final exists = await FileHelper.isFileAvailable(report.imagePath);
+
         if (!exists) {
           final updatedReport = report.copyWith(
             status: ReportStatusEnum.failed,
             lastError: 'file_missing',
             updatedAt: DateTime.now(),
           );
+
           await _localDataSource.updateReport(updatedReport);
           return;
         }
@@ -65,13 +68,13 @@ class ReportRepositoryImpl implements ReportRepository {
         status: ReportStatusEnum.sending,
         updatedAt: DateTime.now(),
       );
+
       await _localDataSource.updateReport(sendingReport);
 
       try {
-        final serverId = await _remoteDataSource.submitReport(
-          sendingReport,
-          idempotencyKey: sendingReport.localId,
-        );
+        final serverId = await _remoteDataSource
+            .submitReport(sendingReport, idempotencyKey: sendingReport.localId)
+            .timeout(const Duration(seconds: 3));
 
         final submittedReport = sendingReport.copyWith(
           serverId: serverId,
@@ -79,7 +82,17 @@ class ReportRepositoryImpl implements ReportRepository {
           lastError: null,
           updatedAt: DateTime.now(),
         );
+
         await _localDataSource.updateReport(submittedReport);
+      } on TimeoutException {
+        final updatedReport = sendingReport.copyWith(
+          status: ReportStatusEnum.failed,
+          retryCount: sendingReport.retryCount + 1,
+          lastError: 'timeout',
+          updatedAt: DateTime.now(),
+        );
+
+        await _localDataSource.updateReport(updatedReport);
       } on Failure catch (e) {
         final updatedReport = sendingReport.copyWith(
           status: ReportStatusEnum.failed,
@@ -87,6 +100,7 @@ class ReportRepositoryImpl implements ReportRepository {
           lastError: e.code,
           updatedAt: DateTime.now(),
         );
+
         await _localDataSource.updateReport(updatedReport);
       } catch (e) {
         final updatedReport = sendingReport.copyWith(
@@ -95,6 +109,7 @@ class ReportRepositoryImpl implements ReportRepository {
           lastError: 'unknown_error',
           updatedAt: DateTime.now(),
         );
+
         await _localDataSource.updateReport(updatedReport);
       }
     } finally {
