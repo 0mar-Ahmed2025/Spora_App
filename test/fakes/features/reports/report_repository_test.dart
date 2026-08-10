@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -12,7 +14,12 @@ import 'package:spora_app/features/reports/domain/repositories/report_repository
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class TestReportRemoteDataSource extends FakeReportRemoteDataSourceImpl {
-  TestReportRemoteDataSource({super.mode, this.delay, this.failure, this.serverId});
+  TestReportRemoteDataSource({
+    super.mode,
+    this.delay,
+    this.failure,
+    this.serverId,
+  });
 
   int submitCalls = 0;
   final List<String> idempotencyKeys = [];
@@ -36,12 +43,36 @@ class TestReportRemoteDataSource extends FakeReportRemoteDataSourceImpl {
   }
 }
 
+class SequenceReportRemoteDataSource extends FakeReportRemoteDataSourceImpl {
+  SequenceReportRemoteDataSource(this.results);
+
+  final List<Object> results;
+  int submitCalls = 0;
+  final List<String> idempotencyKeys = [];
+
+  @override
+  Future<String> submitReport(
+    LocalReportModel report, {
+    required String idempotencyKey,
+  }) async {
+    idempotencyKeys.add(idempotencyKey);
+    final result = results[submitCalls];
+    submitCalls++;
+
+    if (result is Failure) throw result;
+    return result as String;
+  }
+}
+
 LocalReportModel buildReport({
   String localId = 'local-1',
   ReportStatusEnum status = ReportStatusEnum.queued,
   String? imagePath,
   String? lastError,
   int retryCount = 0,
+  double? latitude,
+  double? longitude,
+  DateTime? updatedAt,
 }) {
   return LocalReportModel(
     localId: localId,
@@ -50,11 +81,13 @@ LocalReportModel buildReport({
     categoryId: 'technical',
     priority: ReportPriorityEnum.high,
     imagePath: imagePath,
+    latitude: latitude,
+    longitude: longitude,
     status: status,
     lastError: lastError,
     retryCount: retryCount,
     createdAt: DateTime(2026, 1, 1, 10, 0),
-    updatedAt: DateTime(2026, 1, 1, 10, 0),
+    updatedAt: updatedAt ?? DateTime(2026, 1, 1, 10, 0),
   );
 }
 
@@ -214,15 +247,15 @@ void main() {
     });
 
     test('handles missing image file safely', () async {
+      final local = LocalReportDataSourceImpl();
       final remote = TestReportRemoteDataSource();
       final repo = ReportRepositoryImpl(
-        localDataSource: LocalReportDataSourceImpl(),
+        localDataSource: local,
         remoteDataSource: remote,
       );
-      await repo.createReport(
+      await local.insertReport(
         buildReport(
           imagePath: p.join(Directory.systemTemp.path, 'missing_photo.jpg'),
-          status: ReportStatusEnum.draft,
         ),
       );
 
@@ -232,6 +265,74 @@ void main() {
       expect(reports.single.status, ReportStatusEnum.failed);
       expect(reports.single.lastError, 'file_missing');
       expect(remote.submitCalls, 0);
+    });
+
+    test('blocks manual retry for validation errors until edited', () async {
+      final local = LocalReportDataSourceImpl();
+      final remote = TestReportRemoteDataSource();
+      final repo = ReportRepositoryImpl(
+        localDataSource: local,
+        remoteDataSource: remote,
+      );
+
+      await local.insertReport(
+        buildReport(
+          status: ReportStatusEnum.failed,
+          lastError: 'validation_error',
+          retryCount: 1,
+        ),
+      );
+
+      await repo.submitReport('local-1');
+
+      final reports = await repo.getAllReports();
+      expect(remote.submitCalls, 0);
+      expect(reports.single.status, ReportStatusEnum.failed);
+      expect(reports.single.lastError, 'validation_error');
+      expect(reports.single.retryCount, 1);
+    });
+
+    test('clears lastError after a successful retry', () async {
+      final local = LocalReportDataSourceImpl();
+      final remote = TestReportRemoteDataSource(serverId: 'SERVER_retry');
+      final repo = ReportRepositoryImpl(
+        localDataSource: local,
+        remoteDataSource: remote,
+      );
+
+      await local.insertReport(
+        buildReport(
+          status: ReportStatusEnum.failed,
+          lastError: 'network_unavailable',
+          retryCount: 1,
+        ),
+      );
+
+      await repo.submitReport('local-1');
+
+      final reports = await repo.getAllReports();
+      expect(reports.single.status, ReportStatusEnum.submitted);
+      expect(reports.single.serverId, 'SERVER_retry');
+      expect(reports.single.lastError, isNull);
+      expect(reports.single.retryCount, 1);
+    });
+
+    test('reuses the same idempotency key across retry attempts', () async {
+      final remote = SequenceReportRemoteDataSource([
+        const NetworkFailure(),
+        'SERVER_retry',
+      ]);
+      final repo = ReportRepositoryImpl(
+        localDataSource: LocalReportDataSourceImpl(),
+        remoteDataSource: remote,
+      );
+
+      await repo.createReport(buildReport());
+      await repo.submitReport('local-1');
+
+      final reports = await repo.getAllReports();
+      expect(reports.single.status, ReportStatusEnum.submitted);
+      expect(remote.idempotencyKeys, ['local-1', 'local-1']);
     });
   });
 
@@ -310,6 +411,69 @@ void main() {
       expect(byId['failed-validation']!.lastError, 'validation_error');
       expect(byId['submitted-1']!.status, ReportStatusEnum.submitted);
       expect(byId['draft-1']!.status, ReportStatusEnum.draft);
+    });
+  });
+
+  group('updateReport', () {
+    test('persists cleared coordinates as null values', () async {
+      final repo = ReportRepositoryImpl(
+        localDataSource: LocalReportDataSourceImpl(),
+        remoteDataSource: TestReportRemoteDataSource(),
+      );
+
+      await repo.createReport(
+        buildReport(
+          status: ReportStatusEnum.draft,
+          latitude: 30.0444,
+          longitude: 31.2357,
+        ),
+      );
+
+      final savedReport = (await repo.getAllReports()).single;
+      await repo.updateReport(
+        savedReport.copyWith(latitude: null, longitude: null),
+      );
+
+      await DatabaseHelper.resetForTesting(databasePath: dbPath);
+
+      final reloadedRepo = ReportRepositoryImpl(
+        localDataSource: LocalReportDataSourceImpl(),
+        remoteDataSource: TestReportRemoteDataSource(),
+      );
+      final reports = await reloadedRepo.getAllReports();
+
+      expect(reports.single.latitude, isNull);
+      expect(reports.single.longitude, isNull);
+    });
+  });
+
+  group('getAllReports', () {
+    test('recovers stale sending reports after repository reinitialization',
+        () async {
+      final local = LocalReportDataSourceImpl();
+      final repo = ReportRepositoryImpl(
+        localDataSource: local,
+        remoteDataSource: TestReportRemoteDataSource(),
+      );
+
+      await local.insertReport(
+        buildReport(
+          status: ReportStatusEnum.sending,
+          lastError: 'network_unavailable',
+          updatedAt: DateTime.now().subtract(const Duration(minutes: 6)),
+        ),
+      );
+
+      await DatabaseHelper.resetForTesting(databasePath: dbPath);
+
+      final reloadedRepo = ReportRepositoryImpl(
+        localDataSource: LocalReportDataSourceImpl(),
+        remoteDataSource: TestReportRemoteDataSource(),
+      );
+      final reports = await reloadedRepo.getAllReports();
+
+      expect(reports.single.status, ReportStatusEnum.queued);
+      expect(reports.single.lastError, isNull);
     });
   });
 }
