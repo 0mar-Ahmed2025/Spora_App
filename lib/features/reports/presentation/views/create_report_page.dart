@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spora_app/core/helper/app_pop_up.dart';
 import 'package:spora_app/features/device_capabilities/services/location_service.dart';
+import 'package:spora_app/features/reports/domain/models/report_categories.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/presentation/cubits/create_report/create_report_cubit.dart';
 import 'package:spora_app/features/reports/presentation/cubits/create_report/create_report_state.dart';
@@ -17,12 +18,6 @@ import 'package:spora_app/generated/locale_keys.g.dart';
 class CreateReportPage extends StatelessWidget {
   const CreateReportPage({super.key});
 
-  static const List<Map<String, String>> categories = [
-    {'id': 'technical', 'nameKey': 'category_technical'},
-    {'id': 'service', 'nameKey': 'category_service'},
-    {'id': 'feedback', 'nameKey': 'category_feedback'},
-    {'id': 'other', 'nameKey': 'category_other'},
-  ];
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     final picker = ImagePicker();
@@ -131,7 +126,7 @@ class CreateReportPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.r),
                         value: state.categoryId,
                         hint: Text(LocaleKeys.field_category.tr()),
-                        items: categories.map((cat) {
+                        items: ReportCategories.categories.map((cat) {
                           return DropdownMenuItem<String>(
                             value: cat['id'],
                             child: Text(cat['nameKey']!.tr()),

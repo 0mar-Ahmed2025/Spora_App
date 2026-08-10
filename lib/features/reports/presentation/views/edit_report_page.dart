@@ -7,11 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:spora_app/features/device_capabilities/services/location_service.dart';
 import 'package:spora_app/features/reports/data/datasources/fake_report_remote_data_source.dart';
 import 'package:spora_app/features/reports/data/datasources/local_report_data_source.dart';
 import 'package:spora_app/features/reports/domain/models/local_report_model.dart';
+import 'package:spora_app/features/reports/domain/models/report_categories.dart';
 import 'package:spora_app/features/reports/domain/models/report_enums.dart';
 import 'package:spora_app/features/reports/domain/repositories/report_repository_impl.dart';
 import 'package:spora_app/features/reports/presentation/cubits/edit_report/edit_report_cubit.dart';
@@ -22,13 +22,6 @@ class EditReportPage extends StatefulWidget {
   const EditReportPage({super.key, required this.report});
 
   final LocalReportModel report;
-
-  static const List<Map<String, String>> categories = [
-    {'id': 'technical', 'nameKey': 'category_technical'},
-    {'id': 'service', 'nameKey': 'category_service'},
-    {'id': 'feedback', 'nameKey': 'category_feedback'},
-    {'id': 'other', 'nameKey': 'category_other'},
-  ];
 
   @override
   State<EditReportPage> createState() => _EditReportPageState();
@@ -161,7 +154,7 @@ class _EditReportPageState extends State<EditReportPage> {
                   DropdownButtonFormField<String>(
                     value: state.categoryId,
                     hint: Text(LocaleKeys.field_category.tr()),
-                    items: EditReportPage.categories.map((cat) {
+                    items: ReportCategories.categories.map((cat) {
                       return DropdownMenuItem<String>(
                         value: cat['id'],
                         child: Text(cat['nameKey']!.tr()),
